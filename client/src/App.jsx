@@ -5,7 +5,7 @@ import SignupForm from "./_auth/forms/SignupForm"
 import SigninForm from "./_auth/forms/SigninForm"
 import Home from "./_root/pages/Home"
 
-import "./global.css"
+import "./globals.css"
 
 function App() {
   return (
