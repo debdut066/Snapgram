@@ -1,8 +1,9 @@
 "use client"
- 
+
+import { useState } from "react"
+import { Link } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
  
 import { Button } from "@/components/ui/button"
 import {
@@ -14,16 +15,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
- 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+import Loader from "@/components/shared/Loader"
+
+import { SignupValidation } from "../../lib/validation"
 
 const SignupForm = () => {
+  const [isloading, setIsLoading] = useState(false); 
+  
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(SignupValidation),
     defaultValues: {
       name : "",
       username: "",
@@ -125,8 +125,24 @@ const SignupForm = () => {
             type="submit" 
             className="shad-button_primary"
           >
-            Sign Up
+            { isloading ? 
+              <div className="flex-center gap-2">
+                <Loader/> Loading...
+              </div>
+              :
+              "Sign Up"
+            }
           </Button>
+
+          <p className="text-small-regular text-light-2 text-center mt-2">
+            Already have an account?
+            <Link
+              to="/sign-in"
+              className="text-primary-500 text-semibold ml-2"
+            >
+              Log in
+            </Link>
+          </p>
       </form>
       </section>
     </Form>
