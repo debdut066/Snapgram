@@ -2,6 +2,8 @@ require("dotenv").config()
 const express = require("express");
 const cors = require("cors");
 const createError = require("http-errors");
+const authentication = require('./middleware/auth')
+const database = require("./database");
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
 
@@ -17,8 +19,9 @@ app.use(fileUpload({
 }))
 
 /**
-* @PUBLIC_ROUTE
+* @AUTH_ROUTE
 */
+app.use("/api", require('./routes/auth/authRoutes'))
 
 // If route not found
 app.use(async (req, res, next)=>{
