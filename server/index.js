@@ -1,9 +1,9 @@
 require("dotenv").config()
+require("./database");
 const express = require("express");
 const cors = require("cors");
 const createError = require("http-errors");
 const authentication = require('./middleware/auth')
-const database = require("./database");
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
 
