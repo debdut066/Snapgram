@@ -4,6 +4,7 @@ import RootLayout from "./_root/RootLayout"
 import SignupForm from "./_auth/forms/SignupForm"
 import SigninForm from "./_auth/forms/SigninForm"
 import Home from "./_root/pages/Home"
+import { Toaster } from "@/components/ui/toaster"
 
 import "./globals.css"
 
@@ -22,6 +23,8 @@ function App() {
           <Route path="/" element={<Home/>}/>
         </Route>
       </Routes>
+
+      <Toaster/>
     </main>
   )
 }
