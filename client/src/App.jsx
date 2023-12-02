@@ -1,28 +1,35 @@
+import { lazy, Suspense } from 'react';
+
 import { Route, Routes } from "react-router-dom"
-import AuthLayout from "./_auth/AuthLayout"
-import RootLayout from "./_root/RootLayout"
-import SignupForm from "./_auth/forms/SignupForm"
-import SigninForm from "./_auth/forms/SigninForm"
-import Home from "./_root/pages/Home"
+const AuthLayout = lazy(() => import("./_auth/AuthLayout"))
+const RootLayout = lazy(() => import("./_root/RootLayout"))
+const SignupForm = lazy(() => import("./_auth/forms/SignupForm"))
+const SigninForm = lazy(() => import("./_auth/forms/SigninForm"))
+const Home = lazy(()=> import("./_root/pages/Home"))
 import { Toaster } from "@/components/ui/toaster"
 
 import "./globals.css"
 
 function App() {
+
+  const RenderLoader = () => <p>Loading</p>;
+
   return (
     <main className="flex h-screen">
-      <Routes>
-        {/* Public route */}
-        <Route element={<AuthLayout/>}>
-          <Route path="/sign-up" element={<SignupForm/>}/>
-          <Route path="/sign-in" element={<SigninForm/>}/>
-        </Route>
+      <Suspense fallback={<RenderLoader/>}>
+        <Routes>
+          {/* Public route */}
+          <Route element={<AuthLayout/>}>
+            <Route path="/sign-up" element={<SignupForm/>}/>
+            <Route path="/sign-in" element={<SigninForm/>}/>
+          </Route>
 
-        {/* Private route */}
-        <Route element={<RootLayout/>}>
-          <Route path="/" element={<Home/>}/>
-        </Route>
-      </Routes>
+          {/* Private route */}
+          <Route element={<RootLayout/>}>
+            <Route path="/" element={<Home/>}/>
+          </Route>
+        </Routes>
+      </Suspense>
 
       <Toaster/>
     </main>
