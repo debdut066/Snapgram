@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) =>  {
     try{
         if(!req.body.username || !req.body.password){
-            throw createError("Name or password is missing")
+            throw createError.Conflict("Name or password is missing")
         }else{
             const response = await loginUser(req.body);
             return res.status(200).json(response);
