@@ -55,8 +55,17 @@ const loginUser = async (data) => {
     }
 }
 
+const userProfile = async (userId) => {
+    try {
+        const result = await User.findById(userId).select('-password');
+        return result;
+    } catch (error) {
+        throw createError.BadRequest(error.message);
+    }
+}
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    userProfile
 }

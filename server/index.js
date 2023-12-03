@@ -23,6 +23,12 @@ app.use(fileUpload({
 */
 app.use("/api", require('./routes/auth/authRoutes'))
 
+
+/**
+* @USER_ROUTE
+*/
+app.use("/api/user",authentication, require('./routes/auth/authRoutes'))
+
 // If route not found
 app.use(async (req, res, next)=>{
     next(createError.NotFound("Page not found"))
