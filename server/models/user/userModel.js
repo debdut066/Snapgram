@@ -57,7 +57,7 @@ const loginUser = async (data) => {
 
 const userProfile = async (userId) => {
     try {
-        const result = await User.findById(userId).select('-password');
+        const result = await User.findById(userId).select('-password -posts -liked');
         return result;
     } catch (error) {
         throw createError.BadRequest(error.message);
