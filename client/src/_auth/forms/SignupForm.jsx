@@ -19,13 +19,13 @@ import Loader from "@/components/shared/Loader"
 import { useToast } from "@/components/ui/use-toast"
 
 import { useCreateUserAccount } from "../../lib/react-query/queries";
-import { useUserContext } from "../../context/AuthContext"
+import { UserContext } from "../../context/AuthContext"
 import { SignupValidation } from "../../lib/validation"
 
 const SignupForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { checkUser, isLoading: isUserLoading } = useUserContext();
+  const { checkUser, isLoading: isUserLoading } = UserContext();
   
   const form = useForm({
     resolver: zodResolver(SignupValidation),

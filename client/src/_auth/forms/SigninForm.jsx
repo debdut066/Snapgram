@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import Loader from "@/components/shared/Loader"
 import { useToast } from "@/components/ui/use-toast"
 
-import { SignupValidation } from "../../lib/validation"
+import { SigninValidation } from "../../lib/validation"
 import { useSignInAccount } from "../../lib/react-query/queries";
 
 const SigninForm = () => {
@@ -27,7 +27,7 @@ const SigninForm = () => {
   const { mutateAsync : signInAccount, isLoading } = useSignInAccount();
 
   const form = useForm({
-    resolver: zodResolver(SignupValidation),
+    resolver: zodResolver(SigninValidation),
     defaultValues: {
       username: "",
       password : "",
@@ -36,11 +36,22 @@ const SigninForm = () => {
 
   async function handleSignIn(user) {
     const response = await signInAccount(user);
-
-    if(response){
+    if(response.msg !== "Login is successfull"){
       toast({ title : "Login failed. Please try again"})
+      return;
     }
-    return;
+    localStorage.setItem("userInfo", JSON.stringify(response.user));
+    localStorage.setItem("token", response.token)
+
+    const isLoggedIn = true;
+
+    if(isLoggedIn){
+      form.reset();
+
+      navigate("/");
+    }else{
+      toast({ title : "Login failed. Please tr again."})
+    }
   }
 
 
@@ -109,7 +120,7 @@ const SigninForm = () => {
                   <Loader/> Loading...
                 </div>
               :
-                "Sign Up"
+                "Log In"
             }
           </Button>
 

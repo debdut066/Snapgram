@@ -2,7 +2,7 @@
 import { createContext, useContext, useState } from "react";
 import { getCurrentUser } from "../api/userApi"
 
-export const INITIAL_USER = {
+const INITIAL_USER = {
     id : "",
     name : "",
     username : "",
@@ -30,7 +30,7 @@ const AuthContext = createContext(INITIAL_STATE);
 export function AuthProvider({ children }){
     // const navigate = useNavigate();
     const [ user, setUser ] = useState(INITIAL_USER);
-    const [isAuthenticated, setIsAuthenticated ] = useState(false);
+    const [isAuthenticated, setIsAuthenticated ] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
 
     async function checkAuthUser() {
@@ -72,4 +72,4 @@ export function AuthProvider({ children }){
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>   
 }
 
-export const useUserContext = () => useContext(AuthContext);
+export const UserContext = () => useContext(AuthContext);
