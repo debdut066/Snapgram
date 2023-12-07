@@ -1,8 +1,14 @@
 import { sidebarLinks } from "../../constants"
-import { NavLink } from "react-router-dom"
-import { Link } from "react-router-dom"
+import { NavLink, Link, useLocation } from "react-router-dom"
+import { Button } from "../ui/button"
 
 const LeftSideBar = () => {
+  const { pathname } = useLocation();
+
+  const handleSignOut = async () => {
+
+  }
+  
   return (
     <div className="leftsidebar">
       <div className="flex flex-col gap-11">
@@ -28,22 +34,37 @@ const LeftSideBar = () => {
 
         <ul className="flex flex-col gap-6">
           {sidebarLinks.map((link) => {
-            <li
-              className={`leftsidenar-link group ${}`}
-              key={link.label}
-            >
-              <NavLink>
-                <img 
-                  src={link.imgURL}
-                  alt={link.label}
-                  className=""
-                />
-                {link.label}
-              </NavLink>
-            </li>
+            let isActive = pathname === link.route;
+
+            return (
+              <li
+                className={`leftsidebar-link group ${isActive && "bg-primary-500"}`}
+                key={link.label}
+              >
+                <NavLink
+                  to={link.route}
+                  className="flex gap-4 items-center p-4"
+                >
+                  <img 
+                    src={link.imgURL}
+                    alt={link.label}
+                    className={`group-hover:invert-white ${isActive && "invert-white"}`}
+                  />
+                  {link.label}
+                </NavLink>
+              </li>
+            )
           })}
         </ul>
       </div>
+
+      <Button
+        variant="ghost"
+        className="shad-button_ghost"
+        onClick={handleSignOut}>
+        <img src="../../../public/icons/logout.svg" alt="logout" />
+        <p className="small-medium lg:base-medium">Logout</p>
+      </Button>
     </div>
   )
 }
