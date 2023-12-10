@@ -25,7 +25,7 @@ import { SignupValidation } from "../../lib/validation"
 const SignupForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { checkUser, isLoading: isUserLoading } = UserContext();
+  const { isLoading: isUserLoading } = UserContext();
   
   const form = useForm({
     resolver: zodResolver(SignupValidation),

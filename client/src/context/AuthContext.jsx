@@ -2,26 +2,25 @@
 import { createContext, useContext, useState } from "react";
 import { getCurrentUser } from "../api/userApi"
 
-const INITIAL_USER = {
-    id : "",
-    name : "",
-    username : "",
-    email : "",
-    imageUrl : "",
-    bio : "", 
-    token : ""
-}
+// const INITIAL_USER = {
+//     id : "",
+//     name : "",
+//     username : "",
+//     email : "",
+//     imageUrl : "",
+//     bio : "", 
+// }
 
 const userFromLocal = JSON.parse(localStorage.getItem('userInfo'))
 
 const INITIAL_STATE = {
-    user : userFromLocal === null ? INITIAL_USER : userFromLocal,
+    user : userFromLocal === null ? null : userFromLocal,
     isLoading : false,
-    isAuthenticated : false,
-    token : INITIAL_USER.token,
-    setUser : () => {},
+    isAuthenticated : userFromLocal === null ? false : true,
+    token : userFromLocal === null ? null : userFromLocal.token,
+    saveUser : () => {},
     setIsAuthenticated : () => {},
-    checkAuthUser : async () => false
+    checkAuthUser : async () => false,
 }
 
 const AuthContext = createContext(INITIAL_STATE);
@@ -29,8 +28,8 @@ const AuthContext = createContext(INITIAL_STATE);
 // eslint-disable-next-line react/prop-types
 export function AuthProvider({ children }){
     // const navigate = useNavigate();
-    const [ user, setUser ] = useState(INITIAL_USER);
-    const [isAuthenticated, setIsAuthenticated ] = useState(true);
+    const [ user, setUser ] = useState(null);
+    const [isAuthenticated, setIsAuthenticated ] = useState(userFromLocal === null ? false : true);
     const [isLoading, setIsLoading] = useState(false);
 
     async function checkAuthUser() {
@@ -60,13 +59,26 @@ export function AuthProvider({ children }){
         }
     }
 
+    const saveUser = (data) => {
+        setUser(data);
+        let stringifiedUser = JSON.stringify(data);
+        localStorage.setItem('userInfo', stringifiedUser)
+    }
+
+    const logout = () => {
+        setUser(null)
+        setIsAuthenticated(false);
+        localStorage.removeItem("userInfo")
+    }
+
     const value = {
         user, 
-        setUser,
+        saveUser,
         isLoading,
         isAuthenticated,
         setIsAuthenticated,
         checkAuthUser,
+        logout
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>   
