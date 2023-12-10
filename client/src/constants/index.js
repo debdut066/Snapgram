@@ -1,27 +1,50 @@
 export const sidebarLinks = [
   {
-    imgURL: "../../public/images/home.svg",
+    imgURL: "/icons/home.svg",
     route: "/",
     label: "Home",
   },
   {
-    imgURL: "../../public/images/wallpaper.svg",
+    imgURL: "/icons/wallpaper.svg",
     route: "/explore",
     label: "Explore",
   },
   {
-    imgURL: "../../public/images/people.svg",
+    imgURL: "/icons/people.svg",
     route: "/all-users",
     label: "People",
   },
   {
-    imgURL: "../../public/images/bookmark.svg",
+    imgURL: "/icons/bookmark.svg",
     route: "/saved",
     label: "Saved",
   },
   {
-    imgURL: "../../public/images/gallery-add.svg",
+    imgURL: "/icons/gallery-add.svg",
     route: "/create-post",
     label: "Create Post",
+  },
+];
+
+export const bottombarLinks = [
+  {
+    imgURL: "/icons/home.svg",
+    route: "/",
+    label: "Home",
+  },
+  {
+    imgURL: "/icons/wallpaper.svg",
+    route: "/explore",
+    label: "Explore",
+  },
+  {
+    imgURL: "/icons/bookmark.svg",
+    route: "/saved",
+    label: "Saved",
+  },
+  {
+    imgURL: "/icons/gallery-add.svg",
+    route: "/create-post",
+    label: "Create",
   },
 ];

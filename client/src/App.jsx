@@ -6,6 +6,7 @@ const RootLayout = lazy(() => import("./_root/RootLayout"))
 const SignupForm = lazy(() => import("./_auth/forms/SignupForm"))
 const SigninForm = lazy(() => import("./_auth/forms/SigninForm"))
 const Home = lazy(()=> import("./_root/pages/Home"))
+const CreatePost = lazy(() => import("./_root/pages/CreatePost"))
 import { Toaster } from "@/components/ui/toaster"
 
 import "./globals.css"
@@ -27,6 +28,7 @@ function App() {
           {/* Private route */}
           <Route element={<RootLayout/>}>
             <Route path="/" element={<Home/>}/>
+            <Route path="/create-post" element={<CreatePost/>}/>
           </Route>
         </Routes>
       </Suspense>
