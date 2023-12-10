@@ -1,12 +1,18 @@
 import { sidebarLinks } from "../../constants"
-import { NavLink, Link, useLocation } from "react-router-dom"
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom"
 import { Button } from "../ui/button"
+import { UserContext } from "../../context/AuthContext"
+
 
 const LeftSideBar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { logout } = UserContext();
 
-  const handleSignOut = async () => {
-
+  const handleSignOut = async (e) => {
+    e.preventDefault();
+    logout();
+    navigate("/sign-in")
   }
   
   return (
