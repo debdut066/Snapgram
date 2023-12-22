@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -18,6 +18,9 @@ import FileUploader from "./FileUploader";
 import { ProfileValidation } from "../../lib/validation";
 
 export default function PostForm ({ post, action }) {
+  const navigate = useNavigate();
+
+
   const form = useForm({
     resolver : zodResolver(ProfileValidation),
     defaultValues : {
@@ -70,7 +73,60 @@ export default function PostForm ({ post, action }) {
             </FormItem>
           )}
         />
+        
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Add Location</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="shad-textarea custom-scrollbar"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
 
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">
+                Add Tags (separated by comma " , ")
+                </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Art, Expression, Learn"
+                  type="text"
+                  className="shad-input"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex gap-4 items-center justify-end">
+            <Button
+              type="button"
+              className="shadn-button-dark-4"
+              onClick={()=>navigate(-1)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="shad-button_primary whitespace-nowrap"
+            >
+              Post
+            </Button>
+        </div>
       </form>
     </Form>
   )
