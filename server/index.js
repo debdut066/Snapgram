@@ -23,11 +23,16 @@ app.use(fileUpload({
 */
 app.use("/api", require('./routes/auth/authRoutes'))
 
-
 /**
 * @USER_ROUTE
 */
 app.use("/api/user",authentication, require('./routes/auth/authRoutes'))
+
+/**
+* @POST_ROUTE
+*/
+
+app.use("/api/post", authentication, require('./routes/post/postRoute'))
 
 // If route not found
 app.use(async (req, res, next)=>{

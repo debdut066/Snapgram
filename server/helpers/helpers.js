@@ -3,6 +3,15 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const createError = require("http-errors")
 
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+  secure: true,
+});
+
 async function doesUserExist (data) {
     try {
         let { email, username } = data;
@@ -50,9 +59,19 @@ async function generateToken (data){
     return token;
 }
 
+async function uploadImage(file){
+    const result = await cloudinary.uploader(file.tempFilePath);
+    try {
+        return result.url;
+    } catch (error) {
+        return false;
+    }
+}
+
 module.exports = {
     doesUserExist,
     hashPassword,
     comparePassword,
-    generateToken
+    generateToken,
+    uploadImage
 }
