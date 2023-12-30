@@ -3,7 +3,7 @@ const createError = require("http-errors");
 
 module.exports = async (req, res, next) => {
     try{
-        const token = req.headers.Authorization;
+        const token = (req.headers.authorization).split("Bearer ")[1];
         if(!token) {
             throw createError.Unauthorized("Token is not present");
         }else{

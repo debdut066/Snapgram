@@ -60,10 +60,11 @@ async function generateToken (data){
 }
 
 async function uploadImage(file){
-    const result = await cloudinary.uploader(file.tempFilePath);
     try {
+        const result = await cloudinary.uploader.upload(file.tempFilePath);
         return result.url;
     } catch (error) {
+        console.log("error",error)
         return false;
     }
 }
