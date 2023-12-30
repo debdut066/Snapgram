@@ -1,11 +1,14 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, Navigate } from "react-router-dom"
+import { UserContext } from "../context/AuthContext"
 
 import Topbar from "../components/shared/Topbar"
 import BottomBar from "../components/shared/BottomBar"
 import LeftSideBar from "../components/shared/leftSideBar"
 
 const RootLayout = () => {
-  return (
+  const { isAuthenticated } = UserContext();
+
+  return isAuthenticated ? (
     <div className="w-full md:flex">
       <Topbar/>
       <LeftSideBar/>
@@ -14,6 +17,8 @@ const RootLayout = () => {
       </section>
       <BottomBar/>
     </div>
+  ) : (
+      <Navigate to="/sign-in" replace/>
   )
 }
 

@@ -42,19 +42,13 @@ const SignupForm = () => {
   async function onSubmit(user) {
     try {
       const newUser = await createUserAccount(user);
-      console.log("newUser", newUser)
+      
       if(!newUser){
         toast({ title : "sign up failed. Please try again."})
-      }
-
-      const isLoggedIn = true;
-      if(isLoggedIn){
-        form.reset();
-        navigate("/")
       }else{
-        toast({ title : "Login failed.Please try again later."})
-        return;
+        navigate("/sign-in")
       }
+      form.reset();
     } catch (error) {
       console.log({error});
     }

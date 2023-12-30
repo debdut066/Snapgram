@@ -1,13 +1,14 @@
 import { lazy, Suspense } from 'react';
-
 import { Route, Routes } from "react-router-dom"
+
+import { Toaster } from "@/components/ui/toaster"
+const Home = lazy(()=> import("./_root/pages/Home"))
 const AuthLayout = lazy(() => import("./_auth/AuthLayout"))
 const RootLayout = lazy(() => import("./_root/RootLayout"))
 const SignupForm = lazy(() => import("./_auth/forms/SignupForm"))
 const SigninForm = lazy(() => import("./_auth/forms/SigninForm"))
-const Home = lazy(()=> import("./_root/pages/Home"))
 const CreatePost = lazy(() => import("./_root/pages/CreatePost"))
-import { Toaster } from "@/components/ui/toaster"
+const PostDetails = lazy(() => import("./_root/pages/PostDetails"))
 
 import "./globals.css"
 
@@ -27,8 +28,9 @@ function App() {
 
           {/* Private route */}
           <Route element={<RootLayout/>}>
-            <Route path="/" element={<Home/>}/>
+            <Route index element={<Home/>}/>
             <Route path="/create-post" element={<CreatePost/>}/>
+            <Route path="/post/:id" element={<PostDetails/>}/>
           </Route>
         </Routes>
       </Suspense>
