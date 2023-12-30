@@ -5,7 +5,7 @@ const postSchema = mongoose.Schema({
     creator : { type : mongoose.Types.ObjectId, ref: "User" },
     likes : [{ type : mongoose.Types.ObjectId, ref: "User" }],
     caption : { type : String, maxlength: 2200 },
-    tags : [{ type : string, default : "" }],
+    tags : [{ type : String, default : "" }],
     imageUrl : { type : String, default : "" },
     location : { type : String, default : "" }
 },
