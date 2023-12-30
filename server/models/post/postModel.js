@@ -54,7 +54,22 @@ async function getPost(page, limit){
     }
 }
 
+async function singlePost(postId){
+    try {
+        const post = await Post.findById(postId)
+            .populate({
+                path : "creator",
+                select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
+            })
+        return post;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createPost,
-    getPost
+    getPost,
+    singlePost
 }

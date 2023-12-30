@@ -1,3 +1,5 @@
+const createError = require('http-errors');
+
 const postModel = require('../../models/post/postModel')
 
 async function createPost(req, res, next){
@@ -35,7 +37,24 @@ async function getRecentPost(req, res, next){
     }
 }
 
+async function getPost(req, res, next){
+    try {
+        const postId = req.params.id;
+        if(!postId){
+            throw createError.Conflict("post doesn't exist anymore")
+        }else{
+            const response = await postModel.singlePost(postId);
+            return res.status(200).json(response);
+        }
+        
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 module.exports = {
+    getPost,
     createPost,
     getRecentPost
 }
