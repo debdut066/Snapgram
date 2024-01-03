@@ -6,11 +6,9 @@ import { Input } from "../ui/input";
 import { convertFileToUrl } from "../../lib/utils";
 
 export default function FileUploader({ fieldChange, mediaUrl }){
-    const [file, setFile] = useState([]);
     const [fileUrl, setFileUrl] = useState(mediaUrl);
 
     const onDrop = useCallback((acceptedFiles)=>{
-        setFile(acceptedFiles);
         fieldChange(acceptedFiles);
         setFileUrl(convertFileToUrl(acceptedFiles[0]))
     },[])
