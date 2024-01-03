@@ -1,7 +1,7 @@
 import {
-    // useQuery,
+    useQuery,
     useMutation,
-    // useQueryClient,
+    useQueryClient,
     // useInfiniteQuery
 } from "@tanstack/react-query"
 import { 
@@ -10,26 +10,59 @@ import {
 } from "../../api/authApi.js"
 
 import {
-    createPost
+    createPost,
+    getRecentPost,
+    getPostById,
+    deletePost
 } from "../../api/postApi.js"
 
-export const useCreateUserAccount = () => {
+export function useCreateUserAccount(){
     return useMutation({
         mutationFn : (user) => createUserAccount(user)
     })
-};
+}
 
-export const useSignInAccount = () => {
+export function useSignInAccount(){
     return useMutation({
         mutationFn : (user) => signInAccount(user)
     })
-};
+}
 
-export const useCreatePost = () => {
+export function useCreatePost(){
     return useMutation({
-        mutationFn : (post, token) => createPost(post, token),
+        mutationFn : ({ formdata, token}) => {
+            createPost(formdata, token)
+        },
         onSuccess : (data) => {
             return data;
+        }
+    })
+}
+
+export function useGetRecentPosts(token, page, limit){
+    return useQuery({
+        queryKey : [token , page, limit],
+        queryFn : () => getRecentPost(token, page, limit)
+    })
+}
+
+export function useGetPostById(token, postId){
+    return useQuery({
+        queryKey : [token, postId],
+        queryFn : () => getPostById(token, postId)
+    })
+}
+
+export function useDeletePost(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ postId, token }) => {
+            deletePost(postId, token)
+        },
+        onSuccess : () => {
+            queryClient.invalidateQueries({
+                queryKey : ["deletePost"]
+            })
         }
     })
 }
