@@ -1,8 +1,49 @@
-import React from 'react'
+
+import { useGetRecentPosts } from "../../lib/react-query/queries"
+import { UserContext } from "../../context/AuthContext";
+import Loader from "../../components/shared/Loader";
+import PostCard from "../../components/shared/PostCard";
 
 const Home = () => {
+  const { token } = UserContext();
+
+  const {
+    data : posts,
+    isLoading : isPostLoading,
+    isError : isErrorPosts,
+  } = useGetRecentPosts(token, 1, 20);
+
+  if(isErrorPosts){
+    return(
+      <div className="flex flex-1">
+        <div className="home-container">
+          <div className="body-medium text-light-1">
+            Something bad happened
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div>HomePage</div>
+    <div className="flex flex-1">
+      <div className="home-container">
+        <div className="home-posts">
+          <h2 className="h3-bold md:h-2-bold text-left w-full">Home Feed</h2>
+          {isPostLoading && !posts ? (
+            <Loader/>
+          ) : (
+            <ul className="flex flex-col flex-1 gap-9 w-full">
+              {posts?.map((post) => (
+                <li className="flex justify-center w-full" key={post._id}>
+                  <PostCard post={post}/>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
 
