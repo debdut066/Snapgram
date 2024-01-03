@@ -68,8 +68,40 @@ async function singlePost(postId){
     }
 }
 
+async function deletePost(postId){
+    try {
+        await Post.findByIdAndDelete(postId);
+        return "post is deleted successfully";
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+async function likePost(postId, userId){
+    try {
+        const post = await Post.findById(postId);
+        const isLiked = post.likes.includes(userId);
+        const option = isLiked ? "$pull" : "$addToSet";
+
+        const updatePost = await Post.findByIdAndUpdate(
+            postId,
+            { [option] : { likes : userId} },
+            { new : true},
+        );
+
+        return updatePost;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createPost,
     getPost,
-    singlePost
+    likePost,
+    deletePost,
+    singlePost,
 }

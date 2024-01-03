@@ -53,8 +53,38 @@ async function getPost(req, res, next){
     }
 }
 
+async function likePost(req, res, next){
+    try {
+        if(!req.params.id){
+            throw createError.BadRequest("Post doesn't exist anymore");
+        }else{
+            const response = await postModel.likePost(req.params.id, req.user._id);
+            res.status(200).json(response)
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function deletePost(req, res, next){
+    try {
+        const postId = req.params.id;
+        if(!postId){
+            throw createError.Conflict("post doesn't exist anymore")
+        }else{
+            const response = await postModel.deletePost(postId);
+            return res.status(200).json(response);
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 module.exports = {
     getPost,
     createPost,
+    likePost,
+    deletePost,
     getRecentPost
 }
