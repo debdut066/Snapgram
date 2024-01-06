@@ -81,10 +81,26 @@ async function deletePost(req, res, next){
     }
 }
 
+async function editPost(req, res, next){
+    try {
+        const postId = req.params.id;
+        if(!postId){
+            throw createError.Conflict("post doesn't exist anymore")
+        }else{
+            const response = await postModel.editPost(postId, req.body);
+            return res.status(200).json(response);
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 module.exports = {
     getPost,
     createPost,
     likePost,
+    editPost,
     deletePost,
     getRecentPost
 }

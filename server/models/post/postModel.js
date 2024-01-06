@@ -98,10 +98,31 @@ async function likePost(postId, userId){
     }
 }
 
+async function editPost(postId, data){
+    try {
+        const updatePost = await Post.findByIdAndUpdate(postId,{ 
+                $set : {
+                    caption : data.caption,
+                    tags :  data.tags,
+                    location : data.location
+                }
+            },
+            { new : true},
+        );
+
+        return updatePost;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     createPost,
     getPost,
     likePost,
+    editPost,
     deletePost,
     singlePost,
 }
