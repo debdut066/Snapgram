@@ -65,12 +65,28 @@ export async function deletePost(postId, token){
 
 export async function likePost(postId, token){
     const response = await axios.put(`${BASE_URL}/post/like/${postId}`,
-    { data : "" },
-    {
-        headers : {
-            'Authorization' : `Bearer ${token}`
-        }
+        { data : "" },
+        {
+            headers : {
+                'Authorization' : `Bearer ${token}`
+            }
     })
+    try {
+        return response.data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+export async function editPost(data, token, postId){
+    const response = await axios.put(`${BASE_URL}/post/edit/${postId}`,
+        data,
+        {
+            headers : {
+                'Authorization' : `Bearer ${token}`
+            }
+        }
+    )
     try {
         return response.data;
     } catch (error) {

@@ -20,7 +20,7 @@ export default function PostDetails(){
         deletePost({ postId : postId, token : token })
         navigate(-1);
     }
-
+    
     return (
         <div className="post_details-container">
             {/* <div className="hidden md:flex max-w-5xl w-full">
@@ -56,7 +56,7 @@ export default function PostDetails(){
                                 className="flex items-center gap-3"
                             >
                                 <img
-                                    src={post?.creator.imageUrl || "../../../public/icons/profile-placeholder.svg"} 
+                                    src={post?.creator.imageUrl || "../../../icons/profile-placeholder.svg"} 
                                     alt="creator"
                                     className="w-8 h-8 lg:w-12 lg:h-12 rounded-full"
                                 />
@@ -78,11 +78,11 @@ export default function PostDetails(){
 
                             <div className="flex-center gap-4">
                                 <Link
-                                    to={`/update-post/${post?._id}`}
+                                    to={`/edit/${post._id}`}
                                     className={` ${user._id !== post.creator._id && "hidden"}`}
                                 >
                                     <img
-                                        src="../../../public/icons/edit.svg"
+                                        src="../../../icons/edit.svg"
                                         alt="edit"
                                         height={24}
                                         width={24}
@@ -94,7 +94,7 @@ export default function PostDetails(){
                                     className={`ost_details-delete_btn ${user._id !== post.creator._id && "hidden"}`}
                                 >
                                     <img
-                                        src="../../../public/icons/delete.svg"
+                                        src="../../../icons/delete.svg"
                                         alt="delete"
                                         height={24}
                                         width={24}
@@ -117,7 +117,7 @@ export default function PostDetails(){
                         </div>
 
                         <div className="w-full">
-                            <PostStats post={post} userId={user._id}/>
+                            <PostStats post={post} userId={user._id} token={token}/>
                         </div>
 
                     </div>
