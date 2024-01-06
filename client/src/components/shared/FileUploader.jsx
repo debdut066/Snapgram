@@ -36,7 +36,7 @@ export default function FileUploader({ fieldChange, mediaUrl }){
             ) : (
             <div className="file_uploader-box">
                 <img
-                    src="../../../public/images/file-upload.svg"
+                    src="../../../images/file-upload.svg"
                     width={96}
                     height={77}
                     alt="file upload"

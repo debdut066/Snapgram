@@ -57,7 +57,7 @@ const SignupForm = () => {
   return (
     <Form {...form}>
       <section className="sm:w-420 flex-center flex-col">
-        <img src="../../../public/images/logo.svg" alt="logo"/>
+        <img src="../../../images/logo.svg" alt="logo"/>
         <h2 
           className="
             h3-bold 
