@@ -4,17 +4,20 @@ import {
     useQueryClient,
     // useInfiniteQuery
 } from "@tanstack/react-query"
+
 import { 
     createUserAccount, 
     signInAccount
 } from "../../api/authApi.js"
-
 import {
     createPost,
     getRecentPost,
     getPostById,
-    deletePost
+    deletePost,
+    likePost,
+    editPost
 } from "../../api/postApi.js"
+import { QUERY_KEYS } from "./queryKeys.js"
 
 export function useCreateUserAccount(){
     return useMutation({
@@ -29,27 +32,31 @@ export function useSignInAccount(){
 }
 
 export function useCreatePost(){
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn : ({ formdata, token}) => {
             createPost(formdata, token)
         },
         onSuccess : (data) => {
-            return data;
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+            });
         }
     })
 }
 
 export function useGetRecentPosts(token, page, limit){
     return useQuery({
-        queryKey : [token , page, limit],
+        queryKey : [QUERY_KEYS.GET_RECENT_POSTS],
         queryFn : () => getRecentPost(token, page, limit)
     })
 }
 
 export function useGetPostById(token, postId){
     return useQuery({
-        queryKey : [token, postId],
-        queryFn : () => getPostById(token, postId)
+        queryKey : [QUERY_KEYS.GET_POST_BY_ID, postId],
+        queryFn : () => getPostById(token, postId),
+        enabled : !!postId
     })
 }
 
@@ -61,8 +68,49 @@ export function useDeletePost(){
         },
         onSuccess : () => {
             queryClient.invalidateQueries({
-                queryKey : ["deletePost"]
+                queryKey : [QUERY_KEYS.GET_RECENT_POSTS]
             })
+        }
+    })
+}
+
+export function useEditPost(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : async ({ reqData, token, postId }) => {
+            const result = await editPost(reqData, token, postId);
+            return result;
+        },
+        onSuccess : (data) => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_POST_BY_ID, data?.id]
+            })
+        }
+    })
+}
+
+export function useLikePost(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ postId, token }) => {
+            likePost(postId, token)
+        },
+        onSuccess : (data) => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_POST_BY_ID, data?._id]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_RECENT_POSTS]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_POSTS]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_CURRENT_USER]
+            });
         }
     })
 }
