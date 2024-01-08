@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const Post = require("../../schema/post/postSchema");
+const User = require("../../schema/user/userSchema")
 const { uploadImage } = require("../../helpers/helpers")
+const { redisClient } = require("../../redisConnect")
 
 const createPost = async (data) => {
     try {
@@ -28,8 +30,11 @@ const createPost = async (data) => {
                 location
             })
         }
-        console.log("newPost", newPost)
         const post = await newPost.save();
+
+        await User.findByIdAndUpdate(user._id, 
+            { $push : { likes : post._id}}
+        )
         return post;
     } catch (error) {
         console.log("error",error);
@@ -39,15 +44,22 @@ const createPost = async (data) => {
 
 async function getPost(page, limit){
     try {
-        const posts = await Post.find()
+        const posts = await redisClient.hGet('allPost', 'post');
+        if(posts){
+            return JSON.parse(posts);
+        }else{
+            const posts = await Post.find()
             .populate({
                 path : "creator",
                 select : { _id : 1, name : 1, username : 1, imageUrl : 1}
             })
             .sort({ createdAt : -1 })
             .skip(limit * (page - 1))
-            .limit(limit);        
-        return posts;
+            .limit(limit); 
+            
+            await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
+            return posts;
+        }        
     } catch (error) {
         console.log("error",error);
         throw error;

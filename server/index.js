@@ -6,6 +6,7 @@ const createError = require("http-errors");
 const authentication = require('./middleware/auth')
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
+const { redisConnect } = require('./redisConnect')
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(fileUpload({
     tempFileDir : "/tmp/"
 }))
 
+redisConnect();
+
 /**
 * @AUTH_ROUTE
 */
@@ -26,7 +29,7 @@ app.use("/api", require('./routes/auth/authRoutes'))
 /**
 * @USER_ROUTE
 */
-app.use("/api/user",authentication, require('./routes/auth/authRoutes'))
+app.use("/api/user",authentication, require('./routes/user/userRoute'))
 
 /**
 * @POST_ROUTE
