@@ -14,18 +14,20 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea"
 import { UserContext } from "../../context/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 import Loader from "../shared/Loader"
 
 import FileUploader from "../shared/FileUploader";
-import { ProfileValidation } from "../../lib/validation";
-import { useCreatePost } from "../../lib/react-query/queries";
+import { PostValidation } from "../../lib/validation";
+import { useCreatePost, useEditPost } from "../../lib/react-query/queries";
 
 export default function PostForm ({ post, action }) {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { token } = UserContext();
 
   const form = useForm({
-    resolver : zodResolver(ProfileValidation),
+    resolver : zodResolver(PostValidation),
     defaultValues : {
       caption : post ? post?.caption : "",
       file : [],
@@ -34,12 +36,23 @@ export default function PostForm ({ post, action }) {
     }
   })
 
-
   const { mutateAsync: createPost, isLoading: isLoadingCreate } = useCreatePost();
 
-  const onSubmit = async (values) => {
-    try {
+  const { mutateAsync : editPost, isLoading: isLoadingUpdate } = useEditPost();
 
+  const onSubmit = async (values) => {
+
+    if(action === "Edit"){
+      const updatedPost = await editPost({ reqData : values, token : token, postId : post._id })
+      
+      if (![updatedPost]) {
+        toast({
+          title: `${action} post failed. Please try again.`,
+        });
+      }
+      return navigate(`/post/${post._id}`)
+
+    }else{
       let formdata = new FormData();
 
       Object.entries(values).forEach(([key, value]) => {
@@ -49,16 +62,8 @@ export default function PostForm ({ post, action }) {
           formdata.append(key, value);
         }
       })
-
-      let postData = {
-        formdata,
-        token
-      }
-      await createPost(postData);
+      await createPost({ formdata : formdata, token : token });
       navigate('/');
-
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -150,7 +155,7 @@ export default function PostForm ({ post, action }) {
             <Button
               type="submit"
               className="shad-button_primary whitespace-nowrap"
-              disabled={isLoadingCreate}
+              disabled={isLoadingCreate || isLoadingUpdate}
             >
               {isLoadingCreate && <Loader/>}
               {action} Post
