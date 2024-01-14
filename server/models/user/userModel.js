@@ -1,7 +1,9 @@
 const { default: mongoose } = require("mongoose");
-const { doesUserExist , hashPassword, comparePassword, generateToken } = require("../../helpers/helpers")
-const User = require("../../schema/user/userSchema");
 const createError = require("http-errors");
+
+const User = require("../../schema/user/userSchema");
+const { uploadImage } = require("../../helpers/helpers")
+const { doesUserExist , hashPassword, comparePassword, generateToken } = require("../../helpers/helpers")
 
 const registerUser = async (data) => {
     const isUser = await doesUserExist({
@@ -57,8 +59,58 @@ const loginUser = async (data) => {
 
 const userProfile = async (userId) => {
     try {
-        const result = await User.findById(userId).select('-password -posts -liked');
+        const result = 
+            await User
+                .findById(userId)
+                .select('-password -liked')
+                .populate({
+                    path : 'posts',
+                    populate : {
+                        path : 'creator',
+                        select : { _id : 1, name : 1, username : 1, imageUrl : 1 }
+                    },
+                    options : { limit : 10 }
+                })
         return result;
+    } catch (error) {
+        throw createError.BadRequest(error.message);
+    }
+}
+
+async function updateProfile(reqData){
+    try {
+        let { email, file, username, name, userId, bio } = reqData;
+
+        let response;
+
+        if(file){
+            const result = await uploadImage(file);
+            response = await User.findByIdAndUpdate(userId, 
+                { 
+                    $set : { 
+                        name ,
+                        username,
+                        email,
+                        bio,
+                        imageUrl : result
+                    } 
+                },
+                { projection: { name: 1, email : 1, bio : 1 }, new: true }
+            )
+        }else{
+            response = await User.findByIdAndUpdate(userId, 
+                { 
+                    $set : { 
+                        name ,
+                        username,
+                        email,
+                        bio,
+                    } 
+                },
+                { projection: { name: 1, email : 1, bio : 1 }, new: true }
+            )
+        }
+        return "profile updated";
     } catch (error) {
         throw createError.BadRequest(error.message);
     }
@@ -67,5 +119,6 @@ const userProfile = async (userId) => {
 module.exports = {
     registerUser,
     loginUser,
-    userProfile
+    userProfile,
+    updateProfile
 }
