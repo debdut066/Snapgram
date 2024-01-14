@@ -7,7 +7,7 @@ import { UserContext } from "../../context/AuthContext"
 const LeftSideBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { logout } = UserContext();
+  const { logout, user, token } = UserContext();
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -26,15 +26,15 @@ const LeftSideBar = () => {
             height={36}
           />
         </Link>
-        <Link to="/" className="flex gap-3 items-center">
+        <Link to={`/profile/${user._id}`} className="flex gap-3 items-center">
           <img 
-            src="../../../images/user.jpg" 
+            src={user.imageUrl || "../../../icons/profile-placeholder.svg"} 
             alt="profile-image"
             className="h-14 w-14 rounded-full"
           />
           <div className="flex flex-col">
-            <p className="body-bold">Debdut</p>
-            <p className="small-regular text-light-3">@Debdut066</p>
+            <p className="body-bold">{user.name}</p>
+            <p className="small-regular text-light-3">@{user.username}</p>
           </div>
         </Link>
 
