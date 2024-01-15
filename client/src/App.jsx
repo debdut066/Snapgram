@@ -12,6 +12,7 @@ const CreatePost = lazy(() => import("./_root/pages/CreatePost"))
 const PostDetails = lazy(() => import("./_root/pages/PostDetails"))
 const Profile = lazy(() => import("./_root/pages/Profile"))
 const EditProfile = lazy(() => import("./_root/pages/EditProfile"))
+const Explore = lazy(() => import("./_root/pages/Explore"))
 
 import "./globals.css"
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="/create-post" element={<CreatePost/>}/>
             <Route path="/post/:id" element={<PostDetails/>}/>
             <Route path="/edit/:id" element={<EditPost/>}/>
+            <Route path="/explore" element={<Explore/>}/>
             <Route path="/profile/:id/*" element={<Profile/>}/>
             <Route path="/profile/update/:id" element={<EditProfile/>}/>
           </Route>
