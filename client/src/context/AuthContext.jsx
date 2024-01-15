@@ -1,6 +1,6 @@
 // import { useNavigate } from "react-router-dom";
 import { createContext, useContext, useState } from "react";
-import { getCurrentUser } from "../api/userApi"
+import { getUserById } from "../api/userApi"
 
 // const INITIAL_USER = {
 //     id : "",
@@ -36,7 +36,7 @@ export function AuthProvider({ children }){
     async function checkAuthUser() {
         setIsLoading(true);
         try {
-            const currentUser = await getCurrentUser(user, user.token);
+            const currentUser = await getUserById(user, user.token);
             if (currentUser) {
                 setUser({
                     id: currentUser.id,
