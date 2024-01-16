@@ -31,9 +31,10 @@ const createPost = async (data) => {
             })
         }
         const post = await newPost.save();
+        console.log("post", post, ":", user._id)
 
         await User.findByIdAndUpdate(user._id, 
-            { $push : { likes : post._id}}
+            { $push : { posts : post._id } }
         )
         return post;
     } catch (error) {
@@ -44,11 +45,23 @@ const createPost = async (data) => {
 
 async function getPost(page, limit){
     try {
-        const posts = await redisClient.hGet('allPost', 'post');
-        if(posts){
-            return JSON.parse(posts);
-        }else{
-            const posts = await Post.find()
+        // const posts = await redisClient.hGet('allPost', 'post');
+        // if(posts){
+        //     return JSON.parse(posts);
+        // }else{
+        //     const posts = await Post.find()
+        //     .populate({
+        //         path : "creator",
+        //         select : { _id : 1, name : 1, username : 1, imageUrl : 1}
+        //     })
+        //     .sort({ createdAt : -1 })
+        //     .skip(limit * (page - 1))
+        //     .limit(limit); 
+            
+        //     await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
+        //     return posts;
+        // }
+        const posts = await Post.find()
             .populate({
                 path : "creator",
                 select : { _id : 1, name : 1, username : 1, imageUrl : 1}
@@ -57,9 +70,8 @@ async function getPost(page, limit){
             .skip(limit * (page - 1))
             .limit(limit); 
             
-            await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
-            return posts;
-        }        
+            // await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
+        return posts;        
     } catch (error) {
         console.log("error",error);
         throw error;
@@ -68,6 +80,7 @@ async function getPost(page, limit){
 
 async function singlePost(postId){
     try {
+        console.log("reaching why..................................")
         const post = await Post.findById(postId)
             .populate({
                 path : "creator",
@@ -130,6 +143,20 @@ async function editPost(postId, data){
     }
 }
 
+async function searchPost(searchTerm){
+    try{
+        let regex = new RegExp(searchTerm, 'i');
+        const postSearch = await Post.find({
+            caption : { $regex : regex }
+        })     
+        
+        return postSearch;
+
+    }catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
     createPost,
     getPost,
@@ -137,4 +164,5 @@ module.exports = {
     editPost,
     deletePost,
     singlePost,
+    searchPost
 }

@@ -96,11 +96,27 @@ async function editPost(req, res, next){
     }
 }
 
+async function searchPost(req, res, next){
+    try {
+        let { searchTerm } = req.params;
+        if(!searchTerm){
+            throw createError.Conflict("please enter some thing")
+        }else{
+            const response = await postModel.searchPost(searchTerm);
+            return res.status(200).json(response);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 module.exports = {
     getPost,
     createPost,
     likePost,
     editPost,
     deletePost,
-    getRecentPost
+    getRecentPost,
+    searchPost
 }

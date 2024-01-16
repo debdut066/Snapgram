@@ -6,7 +6,7 @@ const createError = require("http-errors");
 const authentication = require('./middleware/auth')
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
-const { redisConnect } = require('./redisConnect')
+// const { redisConnect } = require('./redisConnect')
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(fileUpload({
     tempFileDir : "/tmp/"
 }))
 
-redisConnect();
+// redisConnect();
 
 /**
 * @AUTH_ROUTE

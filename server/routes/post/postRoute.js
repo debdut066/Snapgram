@@ -8,5 +8,6 @@ router.get("/:id", postController.getPost);
 router.put("/like/:id", postController.likePost);
 router.put("/edit/:id", postController.editPost);
 router.delete("/:id", postController.deletePost);
+router.get("/search/:searchTerm", postController.searchPost);
 
 module.exports = router;
