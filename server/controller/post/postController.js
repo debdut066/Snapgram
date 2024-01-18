@@ -110,6 +110,19 @@ async function searchPost(req, res, next){
     }
 }
 
+async function savePost(req, res, next){
+    try {
+        let postId = req.params.id;
+        if(!postId){
+            throw createError.Conflict("postId not found")
+        }else{
+            const response = await postModel.savePost(postId, req.user._id);
+            return res.status(200).json(response);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
 module.exports = {
     getPost,
@@ -118,5 +131,6 @@ module.exports = {
     editPost,
     deletePost,
     getRecentPost,
-    searchPost
+    searchPost,
+    savePost
 }

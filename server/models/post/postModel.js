@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 const Post = require("../../schema/post/postSchema");
 const User = require("../../schema/user/userSchema")
 const { uploadImage } = require("../../helpers/helpers")
-const { redisClient } = require("../../redisConnect")
+// const { redisClient } = require("../../redisConnect")
 
 const createPost = async (data) => {
     try {
@@ -80,7 +80,6 @@ async function getPost(page, limit){
 
 async function singlePost(postId){
     try {
-        console.log("reaching why..................................")
         const post = await Post.findById(postId)
             .populate({
                 path : "creator",
@@ -148,10 +147,28 @@ async function searchPost(searchTerm){
         let regex = new RegExp(searchTerm, 'i');
         const postSearch = await Post.find({
             caption : { $regex : regex }
+        }).populate({
+            path : "creator",
+            select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
         })     
         
         return postSearch;
 
+    }catch(error){
+        throw error;
+    }
+}
+
+async function savePost(postId, userId){
+    try{
+        const post = await Post.findById(postId);
+        const isSaved = post.saved.includes(userId);
+        const option = isSaved ? "$pull" : "$push";
+
+        await Post.findByIdAndUpdate(postId, { [option] : {saved : userId }});
+        await User.findByIdAndUpdate(userId, { [option] : {saved : postId }})
+
+        return "saved post"
     }catch(error){
         throw error;
     }
@@ -164,5 +181,6 @@ module.exports = {
     editPost,
     deletePost,
     singlePost,
-    searchPost
+    searchPost,
+    savePost
 }

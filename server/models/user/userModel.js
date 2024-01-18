@@ -5,7 +5,7 @@ const User = require("../../schema/user/userSchema");
 const { uploadImage } = require("../../helpers/helpers")
 const { doesUserExist , hashPassword, comparePassword, generateToken } = require("../../helpers/helpers")
 
-const registerUser = async (data) => {
+async function registerUser(data){
     const isUser = await doesUserExist({
         email : data.email || "",
         username : data.username || ""
@@ -34,7 +34,7 @@ const registerUser = async (data) => {
     }
 }
 
-const loginUser = async (data) => {
+async function loginUser (data){
     const isUser = await doesUserExist({
         email : data.username || "",
         username : data.username || ""
@@ -57,7 +57,7 @@ const loginUser = async (data) => {
     }
 }
 
-const userProfile = async (userId) => {
+async function userProfile(userId){
     try {
         const result = 
             await User
@@ -116,9 +116,32 @@ async function updateProfile(reqData){
     }
 }
 
+async function getSavedPost(userId){
+    try{
+        const posts = await User.aggregate([
+            { $match : { _id : userId }},
+            {
+                $lookup : {
+                    from : 'User',
+                    localField : 'saved',
+                    foreignField: '_id',
+                    as : 'savedPost' 
+                },
+            },
+            skip(10),
+            limit(10)
+        ])
+
+        return posts;
+    }catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     userProfile,
-    updateProfile
+    updateProfile,
+    getSavedPost
 }

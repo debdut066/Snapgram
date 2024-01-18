@@ -8,8 +8,12 @@ module.exports = async (req, res, next) => {
             throw createError.Unauthorized("Token is not present");
         }else{
             const isVerify = await jwt.verify(token, process.env.SECRET_KEY);
-            req.user = isVerify;
-            next();
+            try {
+                req.user = isVerify;
+                next();
+            } catch (error) {
+                throw createError.Unauthorized("Token is not valid");
+            }
         }
     }catch(error){
         next(error);
