@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     bio : { type : String, default : "", maxlength: 2200 },
     imageUrl : { type : String, default : "" },
     posts : [{ type : mongoose.Types.ObjectId , ref : 'Post'}],
-    liked : [{ type : mongoose.Types.ObjectId , ref : 'User'}],
+    saved : [{ type : mongoose.Types.ObjectId, ref : 'post'}],
     p_c : { type : Number, default : 0 },
     fl_c : { type : Number, default : 0 },
     fr_c : { type : Number, default : 0 },
