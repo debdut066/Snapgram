@@ -1,35 +1,53 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-import { useLikePost } from "../../lib/react-query/queries";
+import { useLikePost, useSavePost } from "../../lib/react-query/queries";
 import { checkedIsLiked } from "../../lib/utils";
 
-export default function PostStats({ post, userId, token }){
+export default function PostStats({ post, user, token }){
     const likesList = post.likes
     
     const [likes, setLikes] = useState(likesList);
     const [isSaved, setIsSaved] = useState(false);
 
-    const { mutate : likePost, data: likeed } = useLikePost();
+    const { mutate : likePost } = useLikePost();
+    const { mutate : savePost } = useSavePost();
+
+    const savedPostRecord = post.saved.find((record) => record === user._id)
+
+    useEffect(()=>{
+        setIsSaved(savedPostRecord)
+    },[user])
 
     async function handleLike(e){
         e.stopPropagation();
 
         let likesArray = [...likes];
-        if(likesArray.includes(userId)){
-            likesArray = likesArray.filter((id) => id !== userId);
+        if(likesArray.includes(user._id)){
+            likesArray = likesArray.filter((id) => id !== user._id);
         }else{
-            likesArray.push(userId);
+            likesArray.push(user._id);
         }
         setLikes(likesArray);
         likePost({ postId : post._id, token : token });
     }
+
+    async function handleSave(e){
+        e.stopPropagation();
+
+        if(savedPostRecord){
+            setIsSaved(false);
+        }
+
+        savePost({ postId : post._id, token : token });
+        setIsSaved(true)  
+    }    
 
     return (
         <div className={`flex justify-between items-center`}>
             <div className="flex gap-2 mr-5">
                 <img
                     src={`${
-                        checkedIsLiked(likes, userId)
+                        checkedIsLiked(likes, user._id)
                         ?  "../../../icons/liked.svg"
                         :   "../../../icons/like.svg"
                     }`}
@@ -51,7 +69,7 @@ export default function PostStats({ post, userId, token }){
                     width={20}
                     height={20}
                     className="cursor-pointer"
-                    onClick={()=>{}}
+                    onClick={handleSave}
                 />
             </div>
         </div>

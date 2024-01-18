@@ -5,7 +5,7 @@ import { UserContext } from "../../context/AuthContext"
 import PostStats from "./PostStats"
 
 export default function PostCard({ post }){
-  const { user,token } = UserContext();
+  const { user, token } = UserContext();
 
   return (
     <div className="post-card">
@@ -34,7 +34,10 @@ export default function PostCard({ post }){
             </div>
           </div>
         </div>
-        <Link>
+        <Link
+          to={`/profile/update/${post._id}`}
+          className={`${user._id !== post.creator._id && "hidden"}`}
+        >
           <img 
             src="../../../icons/edit.svg"
             alt="edit"
@@ -45,9 +48,9 @@ export default function PostCard({ post }){
       </div>
 
       <Link to={`/post/${post._id}`}>
-        <div className="small-medium lg:base-medium py-5">
-          <p>{post.name}</p>
-          <ul className="flex gap-1 mt-2">
+        <div className="small-medium lg:base-medium flex align-center gap-x-2 py-5">
+          <p>{post.caption}</p>
+          <ul className="flex gap-1">
             {post.tags.map((tag,index)=>(
               <li key={`${tag}${index}`} className="text-light-3 small-regular">
                 #{tag}
@@ -62,7 +65,7 @@ export default function PostCard({ post }){
           alt="post image"
         />
       </Link>
-      <PostStats post={post} userId={user._id} token={token}/>
+      <PostStats post={post} user={user} token={token}/>
     </div>
   )
 }
