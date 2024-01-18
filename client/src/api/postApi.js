@@ -83,12 +83,46 @@ export async function editPost(data, token, postId){
         data,
         {
             headers : {
+                'Content-Type' : 'application/json',
                 'Authorization' : `Bearer ${token}`
             }
         }
     )
     try {
         return response.data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+export async function searchPosts(search, token){
+    const response = await axios.get(`${BASE_URL}/post/search/${search}`,
+        {
+            headers : {
+                'Authorization' : `Bearer ${token}`,
+                'Content-type' : 'application/json'
+            }
+        }
+    )
+    try {
+        return response.data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+export async function savePost(postId, token){
+    const response = await axios.patch(`${BASE_URL}/post/save/${postId}`,
+        { data : {}},
+        {
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${token}`
+            }
+        });
+    
+    try {
+        return response.data;        
     } catch (error) {
         throw new Error(error.message);
     }

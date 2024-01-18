@@ -2,21 +2,24 @@ import {
     useQuery,
     useMutation,
     useQueryClient,
-    // useInfiniteQuery
+    useInfiniteQuery
 } from "@tanstack/react-query"
 
 import { 
     createUserAccount, 
-    signInAccount
+    signInAccount,
 } from "../../api/authApi.js"
 import {
-    createPost,
-    getRecentPost,
-    getPostById,
-    deletePost,
     likePost,
-    editPost
+    editPost,
+    savePost,
+    createPost,
+    deletePost,
+    getPostById,
+    searchPosts,
+    getRecentPost
 } from "../../api/postApi.js"
+import { getUserById, updateUser } from "../../api/userApi.js"
 import { QUERY_KEYS } from "./queryKeys.js"
 
 export function useCreateUserAccount(){
@@ -114,3 +117,71 @@ export function useLikePost(){
         }
     })
 }
+
+export function useUpdateUser(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : async ({ reqData, token, userId }) => {
+            const result = await updateUser(reqData, token, userId);
+            return result;
+        },
+        onSuccess : (data) => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_CURRENT_USER]
+            }),
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_USER_BY_ID, data._id]
+            })
+        }
+    })
+}
+
+export function useGetUserById(userId, token){
+    return useQuery({
+        queryKey : [QUERY_KEYS.GET_USER_BY_ID, userId],
+        queryFn : () => getUserById(userId, token),
+        enabled : !!userId
+    })
+}
+
+export function useSearchPost(searchTerm, token ){
+    return useQuery({
+        queryKey : [QUERY_KEYS.SEARCH_POSTS, searchTerm],
+        queryFn : () => searchPosts(searchTerm, token),
+        enabled : !!searchTerm
+    })
+}
+
+export function useSavePost(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ postId, token }) => {
+            savePost(postId, token)
+        },
+        onSuccess : () => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_RECENT_POSTS]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_POSTS]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY.GET_CURRENT_USER]
+            });
+        }
+    })
+}
+
+// export function useGetPosts(token, page, limit){
+//     return useInfiniteQuery({
+//         queryKey : [QUERY_KEYS.GET_INFINITE_POSTS, page],
+//         queryFn : () => getRecentPost(token, page, limit),
+//         getNextPageParam : (lastPage) => {
+//             if(lastPage){
+
+//             }
+//         }
+//     })
+// }
