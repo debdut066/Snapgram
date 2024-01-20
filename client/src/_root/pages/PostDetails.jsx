@@ -117,7 +117,7 @@ export default function PostDetails(){
                         </div>
 
                         <div className="w-full">
-                            <PostStats post={post} userId={user._id} token={token}/>
+                            <PostStats post={post} user={user} token={token}/>
                         </div>
 
                     </div>

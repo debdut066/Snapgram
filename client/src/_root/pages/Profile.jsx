@@ -10,7 +10,7 @@ import {
 import Loader from "../../components/shared/Loader"
 import { Button } from "../../components/ui/button"
 import GridPostList from "../../components/shared/GridPostList"
-import LikedPosts from "./LikedPosts"
+import LikedPosts from "./SavedPosts"
 
 import { UserContext } from "../../context/AuthContext";
 import { useGetUserById } from "../../lib/react-query/queries";
@@ -116,12 +116,12 @@ export default function Profile(){
                         className={`profile-tab rounded-l-lg ${pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"}`}
                     >
                         <img
-                          src="../../../icons/like.svg"
+                          src="../../../icons/saved.svg"
                           alt="like"
                           width={20}
                           height={20}
                         />
-                        Liked Posts
+                        Saved Posts
                     </Link>
                 </div>
             )}
