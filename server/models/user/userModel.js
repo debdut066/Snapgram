@@ -128,8 +128,8 @@ async function getSavedPost(userId){
                     as : 'savedPost' 
                 },
             },
-            skip(10),
-            limit(10)
+            // skip(10),
+            // limit(10)
         ])
 
         return posts;

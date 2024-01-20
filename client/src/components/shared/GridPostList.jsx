@@ -9,7 +9,7 @@ export default function GridPostList({ posts , showUser = true, showStats = true
 
 	return (
 		<ul className="grid-container">
-			{(posts || []).map((post) => (
+			{posts.map((post) => (
 				<li key={post._id} className="relative min-w-80 h-80" >
 					<Link to={`/post/${post._id}`} 
 						className="grid-post_link"
@@ -32,7 +32,7 @@ export default function GridPostList({ posts , showUser = true, showStats = true
 								<p className="line-clamp-1">{post.creator.name}</p>
 							</div>
 						)}
-						{showStats && <PostStats post={post} userId={user._id} token={token}/>}
+						{showStats && <PostStats post={post} user={user} token={token}/>}
 					</div>
 				</li>
 			)) }

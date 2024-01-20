@@ -39,12 +39,11 @@ async function updateProfile(req, res, next){
 
 async function savedPosts(req, res, next){
     try {
-        console.log("Reaching", req.user)
         const savedPosts = await userModel.getSavedPost(req.user._id);
         return res.status(200).json(savedPosts);
     } catch (error) {
         console.log(error)
-        // next(error);
+        next(error);
     }
 }
 
