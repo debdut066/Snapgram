@@ -13,6 +13,7 @@ const PostDetails = lazy(() => import("./_root/pages/PostDetails"))
 const Profile = lazy(() => import("./_root/pages/Profile"))
 const EditProfile = lazy(() => import("./_root/pages/EditProfile"))
 const Explore = lazy(() => import("./_root/pages/Explore"))
+const SavedPost = lazy(()=>import("./_root/pages/SavedPosts"))
 
 import "./globals.css"
 
@@ -37,6 +38,7 @@ function App() {
             <Route path="/post/:id" element={<PostDetails/>}/>
             <Route path="/edit/:id" element={<EditPost/>}/>
             <Route path="/explore" element={<Explore/>}/>
+            <Route path="/saved" element={<SavedPost/>}/>
             <Route path="/profile/:id/*" element={<Profile/>}/>
             <Route path="/profile/update/:id" element={<EditProfile/>}/>
           </Route>
