@@ -10,11 +10,11 @@ const userSchema = mongoose.Schema({
     imageUrl : { type : String, default : "" },
     posts : [{ type : mongoose.Types.ObjectId , ref : 'Post'}],
     saved : [{ type : mongoose.Types.ObjectId, ref : 'post'}],
-    p_c : { type : Number, default : 0 },
-    fl_c : { type : Number, default : 0 },
-    fr_c : { type : Number, default : 0 },
-    fl : [{ type : mongoose.Types.ObjectId , ref : 'User'}],
-    fr : [{ type : mongoose.Types.ObjectId , ref : 'User'}]
+    p_c : { type : Number, default : 0 }, // user's post count
+    fl_c : { type : Number, default : 0 }, // following count
+    fr_c : { type : Number, default : 0 },// followers count
+    fl : [{ type : mongoose.Types.ObjectId , ref : 'User'}], // following list
+    fr : [{ type : mongoose.Types.ObjectId , ref : 'User'}] // follower list
 },
 { timestamps : true }
 );
