@@ -47,7 +47,7 @@ async function loginUser (data){
             throw createError.BadRequest("Password is not correct");
         }else{
             const token = await generateToken(isUser[0]);
-            
+            delete isUser.password;
             return {
                 msg : "Login is successfull",
                 user : isUser[0],
@@ -118,20 +118,13 @@ async function updateProfile(reqData){
 
 async function getSavedPost(userId){
     try{
-        const posts = await User.aggregate([
-            { $match : { _id : userId }},
-            {
-                $lookup : {
-                    from : 'User',
-                    localField : 'saved',
-                    foreignField: '_id',
-                    as : 'savedPost' 
-                },
-            },
-            // skip(10),
-            // limit(10)
-        ])
-
+        const posts = 
+           await User.findById(userId)
+                // .select('saved')
+                .populate({
+                    path :'saved',
+                    select : { _id : 1, likes : 1, saved : 1, imageUrl : 1}
+                })
         return posts;
     }catch(error){
         throw error;

@@ -42,16 +42,8 @@ const SigninForm = () => {
     }
     localStorage.setItem("userInfo", JSON.stringify(response.user));
     localStorage.setItem("token", response.token)
-
-    const isLoggedIn = true;
-
-    if(isLoggedIn){
-      form.reset();
-
-      navigate("/");
-    }else{
-      toast({ title : "Login failed. Please tr again."})
-    }
+    console.log("reachign")
+    navigate("/");
   }
 
 
