@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     bio : { type : String, default : "", maxlength: 2200 },
     imageUrl : { type : String, default : "" },
     posts : [{ type : mongoose.Types.ObjectId , ref : 'Post'}],
-    saved : [{ type : mongoose.Types.ObjectId, ref : 'post'}],
+    saved : [{ type : mongoose.Types.ObjectId, ref : 'Post'}],
     p_c : { type : Number, default : 0 }, // user's post count
     fl_c : { type : Number, default : 0 }, // following count
     fr_c : { type : Number, default : 0 },// followers count

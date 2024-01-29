@@ -120,7 +120,7 @@ async function getSavedPost(userId){
     try{
         const posts = 
            await User.findById(userId)
-                // .select('saved')
+                .select('saved')
                 .populate({
                     path :'saved',
                     select : { _id : 1, likes : 1, saved : 1, imageUrl : 1}
