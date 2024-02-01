@@ -2,7 +2,8 @@ const { default: mongoose } = require("mongoose");
 const createError = require("http-errors");
 
 const User = require("../../schema/user/userSchema");
-const { uploadImage } = require("../../helpers/helpers")
+const { uploadImage } = require("../../helpers/helpers");
+const { redisClient } = require("../../redisConnect");
 const { doesUserExist , hashPassword, comparePassword, generateToken } = require("../../helpers/helpers")
 
 async function registerUser(data){
@@ -21,9 +22,19 @@ async function registerUser(data){
                 email : data.email,
                 username : data.username,
                 password : hash
-            })
-
-            await newUser.save();
+            })            
+            const response = await newUser.save();
+            let responseObj = {
+                _id : response._id,
+                name : response.name,
+                username : response.username,
+                bio : response.bio,
+                imageUrl : response.imageUrl,
+                fl_c : 0,
+                fr_c : 0,
+                createdAt : response.createdAt
+            }
+            await redisClient.hset(`${data.username}`, responseObj)
             return "registration completed!!"
         }catch(error){
             console.log(error)
@@ -123,10 +134,26 @@ async function getSavedPost(userId){
                 .select('saved')
                 .populate({
                     path :'saved',
-                    select : { _id : 1, likes : 1, saved : 1, imageUrl : 1}
+                    select : { _id : 1, likes : 1, saved : 1, imageUrl : 1, creator : 1}
                 })
         return posts;
     }catch(error){
+        throw error;
+    }
+}
+
+async function getUser(page, limit){
+    try {
+        const users = 
+            await User.find()
+                .select({ _id : 1, name : 1, username : 1, imageUrl : 1 })
+                .sort({ fl_c : 1 })
+                .skip(limit * (page - 1))
+                .limit(limit); 
+        
+        return users;
+
+    } catch (error) {
         throw error;
     }
 }
@@ -136,5 +163,6 @@ module.exports = {
     loginUser,
     userProfile,
     updateProfile,
-    getSavedPost
+    getSavedPost,
+    getUser
 }
