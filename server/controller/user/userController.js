@@ -47,8 +47,35 @@ async function savedPosts(req, res, next){
     }
 }
 
+async function getAllUsers(req, res, next){
+    try {
+        const Users = await userModel.getUser();
+        return res.status(200).json(Users);
+    } catch (error) {
+        console.log(error)
+        next(error);
+    }
+}
+
+async function searchUsers(req, res, next){
+    try {
+        let { searchTerm } = req.query;
+        if(searchTerm){
+            throw createError.Conflict("please enter some thing")
+        }else{
+            const Users = await userModel.searchUser();
+            return res.status(200).json(Users);
+        }
+    } catch (error) {
+        console.log(error)
+        next(error);
+    }
+}
+
 module.exports = {
     userProfile,
     updateProfile,
-    savedPosts
+    savedPosts,
+    getAllUsers,
+    searchUsers
 }

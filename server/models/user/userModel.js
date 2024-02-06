@@ -158,11 +158,25 @@ async function getUser(page, limit){
     }
 }
 
+async function searchUser(searchTerm){
+    try {
+        let regex = new RegExp(searchTerm, "i")
+        const userSearch = await User.find({
+            username : { $regex : regex }
+        }).select({ _id : 1, name : 1, username : 1, imageUrl : 1 })
+    
+        return userSearch;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     userProfile,
     updateProfile,
     getSavedPost,
-    getUser
+    getUser,
+    searchUser
 }
