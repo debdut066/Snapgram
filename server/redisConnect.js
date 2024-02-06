@@ -1,15 +1,20 @@
-const { createClient } = require('redis');
+const redis = require('ioredis');
 
-const redisClient = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_HOST,
-        port: 11414
-    }
+const redisClient = new redis({
+    port : 11414,
+    host : process.env.REDIS_HOST,
+    password : process.env.REDIS_PASSWORD,
+    // db : "debdut-free-db" 
 });
 
 async function redisConnect(){
-    await redisClient.connect()
+    redisClient.on("connect", ()=>{
+        console.log("redis connected")
+    })
+
+    redisClient.on("error", ()=>{
+        console.log("redis error")
+    })
 }
 
 module.exports = {
