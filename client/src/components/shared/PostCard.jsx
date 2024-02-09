@@ -35,7 +35,7 @@ export default function PostCard({ post }){
           </div>
         </div>
         <Link
-          to={`/profile/update/${post._id}`}
+          to={`/edit/${post._id}`}
           className={`${user._id !== post.creator._id && "hidden"}`}
         >
           <img 
