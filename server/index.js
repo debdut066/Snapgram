@@ -34,8 +34,12 @@ app.use("/api/user",authentication, require('./routes/user/userRoute'))
 /**
 * @POST_ROUTE
 */
-
 app.use("/api/post", authentication, require('./routes/post/postRoute'))
+
+/**
+* @Comment_ROUTE
+*/
+app.use("/api/comment", authentication, require('./routes/commentRoute'))
 
 // If route not found
 app.use(async (req, res, next)=>{
