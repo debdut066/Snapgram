@@ -18,10 +18,12 @@ import { useToast } from "@/components/ui/use-toast"
 
 import { SigninValidation } from "../../lib/validation"
 import { useSignInAccount } from "../../lib/react-query/queries";
+import { UserContext } from "../../context/AuthContext"
 
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { setIsAuthenticated } = UserContext()
   
   // Query
   const { mutateAsync : signInAccount, isLoading } = useSignInAccount();
@@ -42,8 +44,8 @@ const SigninForm = () => {
     }
     localStorage.setItem("userInfo", JSON.stringify(response.user));
     localStorage.setItem("token", response.token)
-    console.log("reachign")
-    navigate("/");
+    setIsAuthenticated(true);
+    navigate("/")
   }
 
 

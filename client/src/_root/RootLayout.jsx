@@ -3,7 +3,7 @@ import { UserContext } from "../context/AuthContext"
 
 import Topbar from "../components/shared/Topbar"
 import BottomBar from "../components/shared/BottomBar"
-import LeftSideBar from "../components/shared/leftSideBar"
+import LeftSideBar from "../components/shared/LeftSideBar"
 
 const RootLayout = () => {
   const { isAuthenticated } = UserContext();
