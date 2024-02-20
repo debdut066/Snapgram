@@ -15,6 +15,10 @@ export const QUERY_KEYS = {
     GET_USER_POSTS : "getUserPosts",
     GET_FILE_PREVIEW : "getFilePreview",
     GET_SAVED_POST : "getSavedPosts",
+
+    // COMMENT KEYS
+    GET_RECENT_COMMENTS : "getRecentComments",
+
   
     //  SEARCH KEYS
     SEARCH_POSTS : "getSearchPosts",

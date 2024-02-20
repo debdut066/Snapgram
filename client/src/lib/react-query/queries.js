@@ -19,7 +19,8 @@ import {
     searchPosts,
     getRecentPost
 } from "../../api/postApi.js"
-import { getUserById, updateUser } from "../../api/userApi.js"
+import { creatComment } from "../../api/commentApi.js" 
+import { getUserById, updateUser, getSavedPost } from "../../api/userApi.js"
 import { QUERY_KEYS } from "./queryKeys.js"
 
 export function useCreateUserAccount(){
@@ -169,6 +170,27 @@ export function useSavePost(){
 
             queryClient.invalidateQueries({
                 queryKey : [QUERY.GET_CURRENT_USER]
+            });
+        }
+    })
+}
+
+export function useGetSavedPost(token){
+    return useQuery({
+        queryKey : [QUERY_KEYS.GET_SAVED_POST, token],
+        queryFn : () => getSavedPost(token),
+    })
+}
+
+export function useCreateComment(){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ data, token}) => {
+            creatComment(data, token)
+        },
+        onSuccess : (data) => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_COMMENTS],
             });
         }
     })

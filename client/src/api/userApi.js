@@ -31,3 +31,18 @@ export async function updateUser(data, token, userId){
         throw new Error(error.message)
     }
 }
+
+export async function getSavedPost(token){
+    const response = await axios.get(`${BASE_URL}/user/saved`, {
+        headers : {
+            'Content-Type' : 'application/json',
+            'Authorization' : `Bearer ${token}`
+        }
+    });
+    try{
+        return response.data;
+    }catch(error){
+        console.log(error)
+        throw new Error(error.message)
+    }
+}
