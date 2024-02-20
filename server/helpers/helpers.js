@@ -18,7 +18,7 @@ async function doesUserExist (data) {
 
         const isUser = await User.find({
             $or : [{ email : email }, { username : username }]
-        });
+        }).select('-liked -bio -fl -fr -liked -p_c, -saved');
 
         return isUser;
 
@@ -47,16 +47,20 @@ async function comparePassword (password, user){
 }
 
 async function generateToken (data){
-    const token = jwt.sign({
-        _id : data._id,
-        name : data.name,
-        username : data.username,
-    },
-    process.env.SECRET_KEY,
-    { expiresIn : "30d"}
-    );
-
-    return token;
+    try {
+        const token = jwt.sign({
+            _id : data._id,
+            name : data.name,
+            username : data.username,
+        },
+        process.env.SECRET_KEY,
+        { expiresIn : "30d"}
+        );
+        
+        return token;
+    } catch (error) {
+        console.log("error",error)
+    }
 }
 
 async function uploadImage(file){

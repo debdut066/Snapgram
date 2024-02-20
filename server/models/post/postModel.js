@@ -1,8 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const Post = require("../../schema/post/postSchema");
-const User = require("../../schema/user/userSchema")
+const User = require("../../schema/user/userSchema");
 const { uploadImage } = require("../../helpers/helpers")
-// const { redisClient } = require("../../redisConnect")
+const { createOrUpdateTrending } = require("../trending/trendingModel")
 
 const createPost = async (data) => {
     try {
@@ -23,19 +23,22 @@ const createPost = async (data) => {
             })
         }else{
             newPost = Post({
-                _id :new mongoose.Types.ObjectId(),
+                _id : new mongoose.Types.ObjectId(),
                 creator : user._id,
                 caption : caption,
-                tags : [tags],
+                tags : tags.split(','),
                 location
             })
         }
         const post = await newPost.save();
-        console.log("post", post, ":", user._id)
-
         await User.findByIdAndUpdate(user._id, 
             { $push : { posts : post._id } }
         )
+        const hastags = tags.split(',');
+        // console.log("hastag", hastags)
+        // for(let hastag of hastags){
+        //     await createOrUpdateTrending(hastag)
+        // }
         return post;
     } catch (error) {
         console.log("error",error);
@@ -45,22 +48,6 @@ const createPost = async (data) => {
 
 async function getPost(page, limit){
     try {
-        // const posts = await redisClient.hGet('allPost', 'post');
-        // if(posts){
-        //     return JSON.parse(posts);
-        // }else{
-        //     const posts = await Post.find()
-        //     .populate({
-        //         path : "creator",
-        //         select : { _id : 1, name : 1, username : 1, imageUrl : 1}
-        //     })
-        //     .sort({ createdAt : -1 })
-        //     .skip(limit * (page - 1))
-        //     .limit(limit); 
-            
-        //     await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
-        //     return posts;
-        // }
         const posts = await Post.find()
             .populate({
                 path : "creator",
@@ -69,8 +56,6 @@ async function getPost(page, limit){
             .sort({ createdAt : -1 })
             .skip(limit * (page - 1))
             .limit(limit); 
-            
-            // await redisClient.hSet('allPost', 'post', JSON.stringify(posts))
         return posts;        
     } catch (error) {
         console.log("error",error);
@@ -151,9 +136,7 @@ async function searchPost(searchTerm){
             path : "creator",
             select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
         })     
-        
         return postSearch;
-
     }catch(error){
         throw error;
     }
