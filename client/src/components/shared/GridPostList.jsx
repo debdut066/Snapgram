@@ -6,7 +6,7 @@ import { UserContext } from "../../context/AuthContext";
 
 export default function GridPostList({ posts , showUser = true, showStats = true }){
 	const { user, token } = UserContext();
-
+	
 	return (
 		<ul className="grid-container">
 			{posts.map((post) => (
