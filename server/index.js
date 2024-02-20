@@ -47,7 +47,7 @@ app.use(async (req, res, next)=>{
 })
 
 // Error message
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     res.status(err.status || 500);
     res.send({
         error : {
