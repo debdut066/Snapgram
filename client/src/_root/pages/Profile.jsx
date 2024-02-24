@@ -27,7 +27,7 @@ export default function Profile(){
     const { pathname } = useLocation();
     const { token, user } = UserContext();
 
-    const { data : currentUser } = useGetUserById(id || "", token);
+    const { data : currentUser } = useGetUserById("debdut066" || "", token);
     
     if(!currentUser){
         return (
@@ -60,8 +60,8 @@ export default function Profile(){
 
                         <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
                             <StatBlock value={currentUser.posts.length} label="Posts" />
-                            <StatBlock value={20} label="Followers" />
-                            <StatBlock value={20} label="Following" />
+                            <StatBlock value={currentUser.fr_c} label="Followers" />
+                            <StatBlock value={currentUser.fl_c} label="Following" />
                         </div>
 
                         <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
@@ -116,12 +116,12 @@ export default function Profile(){
                         className={`profile-tab rounded-l-lg ${pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"}`}
                     >
                         <img
-                          src="../../../icons/saved.svg"
+                          src="../../../icons/like.svg"
                           alt="like"
                           width={20}
                           height={20}
                         />
-                        Saved Posts
+                        Liked Posts
                     </Link>
                 </div>
             )}

@@ -64,11 +64,11 @@ export default function PostStats({ post, user, token }){
                 </span>
                 <span className="flex gap-2 mr-5">
                     <AiOutlineComment color="#8983d9" size={24}/>
-                    <p className="small-medium lg:base-medium">0</p>
+                    <p className="small-medium lg:base-medium">{post.c_c}</p>
                 </span>
                 <span className="flex gap-2 mr-5">
                     <PiShareFatBold color="#8983d9" size={24}/>
-                    <p className="small-medium lg:base-medium">0</p>
+                    <p className="small-medium lg:base-medium">{post.s_c}</p>
                 </span>
             </div>
             <div className="flex gap-2">

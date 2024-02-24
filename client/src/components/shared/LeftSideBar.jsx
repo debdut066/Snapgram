@@ -38,7 +38,7 @@ const LeftSideBar = () => {
           </div>
         </Link>
 
-        <ul className="flex flex-col gap-6">
+        <ul className="flex flex-col gap-3 overflow-hidden">
           {sidebarLinks.map((link) => {
             let isActive = pathname === link.route;
 

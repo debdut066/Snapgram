@@ -72,7 +72,7 @@ async function userProfile(userId){
     try {
         const result = 
             await User
-                .findById(userId)
+                .findOne({ username : userId })
                 .select('-password -liked')
                 .populate({
                     path : 'posts',

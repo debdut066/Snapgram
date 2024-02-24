@@ -6,7 +6,9 @@ const createError = require("http-errors");
 const authentication = require('./middleware/auth')
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
-const { redisConnect } = require('./redisConnect')
+const { redisConnect } = require('./redisConnect');
+const SocketService = require("./services/socket")
+const socketService = new SocketService()
 
 const app = express();
 
@@ -19,7 +21,7 @@ app.use(fileUpload({
     tempFileDir : "/tmp/"
 }))
 
-redisConnect();
+// redisConnect();
 
 /**
 * @AUTH_ROUTE
@@ -60,3 +62,7 @@ app.use((err, req, res) => {
 const server = app.listen(PORT, () => {
     console.log(`App listening on ${PORT}`)
 })
+
+socketService._io.attach(server);
+
+socketService.initListeners()

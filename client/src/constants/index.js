@@ -9,20 +9,30 @@ export const sidebarLinks = [
     route: "/explore",
     label: "Explore",
   },
-  {
-    imgURL: "/icons/people.svg",
-    route: "/all-users",
-    label: "People",
-  },
+  // {
+  //   imgURL: "/icons/people.svg",
+  //   route: "/all-users",
+  //   label: "People",
+  // },
   {
     imgURL: "/icons/bookmark.svg",
     route: "/saved",
     label: "Saved",
   },
   {
+    imgURL :"/icons/chat.svg",
+    route : "/chat",
+    label: "Chat"
+  },
+  {
     imgURL: "/icons/gallery-add.svg",
     route: "/create-post",
     label: "Create Post",
+  },
+  {
+    imgURL :"/icons/bell.svg",
+    route : "/notification",
+    label: "Notification"
   },
 ];
 

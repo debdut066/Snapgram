@@ -3,10 +3,10 @@ const userModel = require("../../models/user/userModel")
 
 async function userProfile(req, res, next){
     try{
-        if(!req.params.id){
+        if(!req.params.username){
             throw createError.Conflict("userId missing!!");
         }else{
-            const response = await userModel.userProfile(req.params.id);
+            const response = await userModel.userProfile(req.params.username);
             return res.status(200).json(response);
         }
     }catch(error){
@@ -59,8 +59,8 @@ async function getAllUsers(req, res, next){
 
 async function searchUsers(req, res, next){
     try {
-        let { searchTerm } = req.query;
-        if(searchTerm){
+        let searchTerm = req.params.searchTerm;
+        if(!searchTerm){
             throw createError.Conflict("please enter some thing")
         }else{
             const Users = await userModel.searchUser();

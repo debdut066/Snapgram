@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const trendingSchema = mongoose.Schema({
     _id : { type : mongoose.Schema.Types.ObjectId },
-    hashtag: { type: String, unique: true, required: true },
+    hastag: { type: String, unique: true, required: true },
     count: { type: Number, default: 0 }
 },
 { timestamps : true }

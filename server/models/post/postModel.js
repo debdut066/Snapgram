@@ -66,9 +66,17 @@ async function getPost(page, limit){
 async function singlePost(postId){
     try {
         const post = await Post.findById(postId)
+            .select('c_c caption creator comment imageUrl l_c location s_c tags _id likes saved createdAt')
             .populate({
                 path : "creator",
                 select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
+            })
+            .populate({
+                path : "comment",
+                populate : {
+                    path : "creator",
+                    select : '_id username imageUrl'
+                }
             })
         return post;
     } catch (error) {

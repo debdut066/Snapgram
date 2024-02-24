@@ -35,8 +35,6 @@ export default function PostDetails(){
         await createComment({ data : reqBody, token : token });
         setCommentValue("")
     }
-
-    console.log("data", post)
     
     return (
         <div className="post_details-container">
