@@ -78,9 +78,9 @@ export function formatTimestamp(timestamp) {
   if (years >= 1) {
       return years + (years === 1 ? "yr" : "yrs");
   } else if (months >= 1) {
-      return months + (months === 1 ? "mo" : "mos");
+      return months + (months === 1 ? "m" : "m");
   } else if (weeks >= 1) {
-      return weeks + (weeks === 1 ? "wk" : "wks");
+      return weeks + (weeks === 1 ? "w" : "wk");
   } else if (days >= 1) {
       return days + (days === 1 ? "d" : "d");
   } else if (hours >= 1) {
