@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const Post = require("../../schema/post/postSchema");
+const { publisher } = require("../../services/redis-Pub-Sub")
 const User = require("../../schema/user/userSchema");
 const { uploadImage } = require("../../helpers/helpers")
 const { createOrUpdateTrending } = require("../trending/trendingModel")
@@ -106,6 +107,18 @@ async function likePost(postId, userId){
             { [option] : { likes : userId} },
             { new : true},
         );
+
+        if(!isLiked){
+            let notiData = {
+                type : 'like',
+                actionBy : userId,
+                target: {
+                    type : 'post',
+                    id : postId
+                }
+            }
+            await publisher("NOTIFICATION", notiData)
+        }
 
         return updatePost;
 

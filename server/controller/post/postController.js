@@ -1,5 +1,4 @@
 const createError = require('http-errors');
-
 const postModel = require('../../models/post/postModel')
 
 async function createPost(req, res, next){
