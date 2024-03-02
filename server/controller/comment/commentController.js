@@ -1,5 +1,5 @@
 const createError = require("http-errors")
-const commentModel = require("../models/commentModel")
+const commentModel = require("../../models/comment/commentModel")
 
 const createComment = async (req, res, next) => {
     try {

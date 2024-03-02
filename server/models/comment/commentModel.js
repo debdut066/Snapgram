@@ -1,8 +1,8 @@
 
 const { default: mongoose } = require("mongoose");
-const { uploadImage } = require("../helpers/helpers")
-const Comment = require("../schema/comment/commentSchema");
-const Post = require("../schema/post/postSchema")
+const { uploadImage } = require("../../helpers/helpers")
+const Comment = require("../../schema/comment/commentSchema");
+const Post = require("../../schema/post/postSchema")
 const createError = require('http-errors');
 
 const createComment = async (userId, postId, content, file) => {
