@@ -7,6 +7,7 @@ const authentication = require('./middleware/auth')
 const fileUpload = require("express-fileupload");
 const PORT = process.env.PORT || 8000;
 const { redisConnect } = require('./redisConnect');
+const { subscriber }= require("./services/redis-Pub-Sub")
 const SocketService = require("./services/socket")
 const socketService = new SocketService()
 
@@ -21,7 +22,8 @@ app.use(fileUpload({
     tempFileDir : "/tmp/"
 }))
 
-// redisConnect();
+redisConnect();
+subscriber();
 
 /**
 * @AUTH_ROUTE
@@ -41,7 +43,7 @@ app.use("/api/post", authentication, require('./routes/post/postRoute'))
 /**
 * @Comment_ROUTE
 */
-app.use("/api/comment", authentication, require('./routes/commentRoute'))
+app.use("/api/comment", authentication, require('./routes/comment/commentRoute'))
 
 // If route not found
 app.use(async (req, res, next)=>{
