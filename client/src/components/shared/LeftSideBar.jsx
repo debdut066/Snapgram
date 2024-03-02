@@ -7,7 +7,7 @@ import { UserContext } from "../../context/AuthContext"
 const LeftSideBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { logout, user, token } = UserContext();
+  const { logout, user } = UserContext();
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -17,7 +17,7 @@ const LeftSideBar = () => {
   
   return (
     <div className="leftsidebar">
-      <div className="flex flex-col gap-11">
+      <div className="flex flex-col gap-5">
         <Link to="/" className="flex gap-3 items-center">
           <img
             src="../../../images/logo.svg"

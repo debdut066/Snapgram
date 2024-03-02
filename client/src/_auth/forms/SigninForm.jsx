@@ -23,7 +23,7 @@ import { UserContext } from "../../context/AuthContext"
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { setIsAuthenticated } = UserContext()
+  const { setIsAuthenticated, saveUser } = UserContext()
   
   // Query
   const { mutateAsync : signInAccount, isLoading } = useSignInAccount();
@@ -42,8 +42,7 @@ const SigninForm = () => {
       toast({ title : "Login failed. Please try again"})
       return;
     }
-    localStorage.setItem("userInfo", JSON.stringify(response.user));
-    localStorage.setItem("token", response.token)
+    saveUser(response)
     setIsAuthenticated(true);
     navigate("/")
   }

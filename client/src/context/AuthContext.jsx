@@ -12,13 +12,13 @@ import { getUserById } from "../api/userApi"
 // }
 
 const userFromLocal = JSON.parse(localStorage.getItem('userInfo')) || null;
-const token = localStorage.getItem('token') || null;
+const tokenValue = localStorage.getItem('token') || null;
 
 const INITIAL_STATE = {
     user : userFromLocal,
     isLoading : false,
     isAuthenticated : !userFromLocal ? false : true,
-    token : token,
+    token : tokenValue,
     saveUser : () => {},
     setIsAuthenticated : () => {},
     checkAuthUser : async () => false,
@@ -30,6 +30,7 @@ const AuthContext = createContext(INITIAL_STATE);
 export function AuthProvider({ children }){
     // const navigate = useNavigate();
     const [ user, setUser ] = useState(userFromLocal);
+    const [ token, setToken ] = useState(tokenValue)
     const [isAuthenticated, setIsAuthenticated ] = useState(userFromLocal === null ? false : true);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -61,10 +62,11 @@ export function AuthProvider({ children }){
     }
 
     const saveUser = (data) => {
-        setUser(data);
-        let stringifiedUser = JSON.stringify(data);
+        setUser(data.user);
+        setToken(data.token)
+        let stringifiedUser = JSON.stringify(data.user);
         localStorage.setItem('userInfo', stringifiedUser);
-        localStorage.setItem('token', stringifiedUser.token)
+        localStorage.setItem('token', data.token)
     }
 
     const logout = () => {

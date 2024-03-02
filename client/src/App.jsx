@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Route, Routes } from "react-router-dom"
+import { useSocket } from './context/SocketContext';
 
 import { Toaster } from "@/components/ui/toaster"
 const Home = lazy(()=> import("./_root/pages/Home"))
@@ -15,11 +16,11 @@ const EditProfile = lazy(() => import("./_root/pages/EditProfile"))
 const Explore = lazy(() => import("./_root/pages/Explore"))
 const SavedPost = lazy(()=>import("./_root/pages/SavedPosts"))
 const AllUsers = lazy(()=> import("./_root/pages/AllUsers"))
+const Notification = lazy(() => import("./_root/pages/Notification"))
 
 import "./globals.css"
 
 function App() {
-
   const RenderLoader = () => <p>Loading</p>;
 
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/profile/:id/*" element={<Profile/>}/>
             <Route path="/all-users" element={<AllUsers/>}/>
             <Route path="/profile/update/:id" element={<EditProfile/>}/>
+            <Route path="/notification" element={<Notification/>}/>
           </Route>
         </Routes>
       </Suspense>
