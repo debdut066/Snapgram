@@ -196,14 +196,13 @@ export function useCreateComment(){
     })
 }
 
-// export function useGetPosts(token, page, limit){
-//     return useInfiniteQuery({
-//         queryKey : [QUERY_KEYS.GET_INFINITE_POSTS, page],
-//         queryFn : () => getRecentPost(token, page, limit),
-//         getNextPageParam : (lastPage) => {
-//             if(lastPage){
-
-//             }
-//         }
-//     })
-// }
+export function useGetPosts(token, page, limit){
+    return useInfiniteQuery({
+        queryKey : [QUERY_KEYS.GET_INFINITE_POSTS, page],
+        queryFn : ({ pageParam = page }) => getRecentPost(token, pageParam, limit),
+        getNextPageParam: (lastPage) => {
+            const nextPage = lastPage.page + 1;
+            return nextPage * limit <= lastPage.total ? nextPage : undefined;
+        },
+    })
+}

@@ -9,11 +9,11 @@ export const sidebarLinks = [
     route: "/explore",
     label: "Explore",
   },
-  // {
-  //   imgURL: "/icons/people.svg",
-  //   route: "/all-users",
-  //   label: "People",
-  // },
+  {
+    imgURL: "/icons/people.svg",
+    route: "/all-users",
+    label: "People",
+  },
   {
     imgURL: "/icons/bookmark.svg",
     route: "/saved",
