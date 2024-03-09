@@ -17,7 +17,7 @@ export async function createPost(data, token){
     }
 }
 
-export async function getRecentPost(token, page, limit){
+export async function getRecentPost(page, token){
     const response = await axios.get(`${BASE_URL}/post`, {
         headers : {
             'Content-Type' : 'application/json',
@@ -25,7 +25,6 @@ export async function getRecentPost(token, page, limit){
         },
         params : {
             page,
-            limit
         }
     });
     try {

@@ -27,8 +27,10 @@ async function createPost(req, res, next){
 async function getRecentPost(req, res, next){
     try {
         const page = req.query.page || 1;
-        const limit = req.query.limit || 20;
-        const response = await postModel.getPost(page, limit);
+        const response = await postModel.getPost(page);
+        // return res.status(200).json({ 
+        //     data : response
+        // });
         return res.status(200).json(response);
     } catch (error) {
         console.log(error.message)

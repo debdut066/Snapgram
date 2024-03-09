@@ -23,6 +23,8 @@ import { creatComment } from "../../api/commentApi.js"
 import { getUserById, updateUser, getSavedPost } from "../../api/userApi.js"
 import { QUERY_KEYS } from "./queryKeys.js"
 
+let PER_PAGE = 3
+
 export function useCreateUserAccount(){
     return useMutation({
         mutationFn : (user) => createUserAccount(user)
@@ -49,10 +51,13 @@ export function useCreatePost(){
     })
 }
 
-export function useGetRecentPosts(token, page, limit){
-    return useQuery({
-        queryKey : [QUERY_KEYS.GET_RECENT_POSTS],
-        queryFn : () => getRecentPost(token, page, limit)
+export function useGetRecentPosts(token){
+    return useInfiniteQuery({
+        queryKey : [QUERY_KEYS.GET_INFINITE_POSTS],
+        queryFn : ({ pageParam = 1 }) => getRecentPost(pageParam, token),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === PER_PAGE ? allPages.length + 1 : undefined;
+        },
     })
 }
 
@@ -196,13 +201,12 @@ export function useCreateComment(){
     })
 }
 
-export function useGetPosts(token, page, limit){
+export function useGetPosts(token){
     return useInfiniteQuery({
-        queryKey : [QUERY_KEYS.GET_INFINITE_POSTS, page],
-        queryFn : ({ pageParam = page }) => getRecentPost(token, pageParam, limit),
-        getNextPageParam: (lastPage) => {
-            const nextPage = lastPage.page + 1;
-            return nextPage * limit <= lastPage.total ? nextPage : undefined;
+        queryKey : [QUERY_KEYS.GET_INFINITE_POSTS],
+        queryFn : ({ pageParam = 1 }) => getRecentPost(pageParam, token),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === PER_PAGE ? allPages.length + 1 : undefined;
         },
     })
 }

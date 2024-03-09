@@ -7,7 +7,7 @@ import GridPostList from '../../components/shared/GridPostList';
 import { UserContext } from '../../context/AuthContext';
 
 import useDebounce from '../../hooks/useDebounce';
-import { useSearchPost, useGetRecentPosts } from '../../lib/react-query/queries';
+import { useSearchPost, useGetRecentPosts, useGetPosts } from '../../lib/react-query/queries';
 
 function SearchResults({ isSearchFetching, searchedPosts }){
     if(isSearchFetching){
@@ -27,18 +27,20 @@ function Explore(){
     const [searchValue, setSearchValue] = useState("");
     const debounceSearch = useDebounce(searchValue, 1000);
     const { data : searchPosts, isFetching : isSearchFetching } = useSearchPost(debounceSearch, token)
-    const { data : posts, isLoading : isPostLoading, fetchNextPage, hasNextPage } = useGetRecentPosts(token, 1, 2);
+    const { data , fetchNextPage, hasNextPage } = useGetPosts(token);
+    const posts = data?.pages;
 
     useEffect(()=>{
         if(inView && !searchValue){
             fetchNextPage();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[inView, searchValue])
 
     const shouldShowSearchResults = searchValue !== "";
     const shouldShowPosts = !shouldShowSearchResults && posts?.length === 0
 
-    if(isPostLoading){
+    if(!posts){
         return (
             <div className='flex-center w-full h-full'>
                 <Loader/>
@@ -83,7 +85,7 @@ function Explore(){
             </div>
 
             <div className='flex flex-wrap gap-9 w-full max-w-5xl'>
-                {shouldShowSearchResults ? (
+                {/* {shouldShowSearchResults ? (
                     <SearchResults
                         isSearchFetching={isSearchFetching}
                         searchedPosts={searchPosts}
@@ -92,7 +94,14 @@ function Explore(){
                     <p className='text-light-4 mt-10 text-center w-full'>End of posts</p>
                 ) : (
                     <GridPostList posts={posts}/>
-                )}
+                )} */}
+                { shouldShowSearchResults && <SearchResults isSearchFetching={isSearchFetching} searchedPosts={searchPosts} />}
+                { shouldShowPosts &&  <p className='text-light-4 mt-10 text-center w-full'>End of posts</p> }
+                { !shouldShowPosts && !shouldShowSearchResults &&
+                    posts.map((post, i) => (
+                        <GridPostList key={i} posts={post}/>
+                    ))
+                }
             </div>
 
             { hasNextPage && !searchValue && (

@@ -22,7 +22,7 @@ app.use(fileUpload({
     tempFileDir : "/tmp/"
 }))
 
-redisConnect();
+// redisConnect();
 subscriber();
 
 /**

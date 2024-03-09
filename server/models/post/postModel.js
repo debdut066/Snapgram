@@ -4,6 +4,7 @@ const { publisher } = require("../../services/redis-Pub-Sub")
 const User = require("../../schema/user/userSchema");
 const { uploadImage } = require("../../helpers/helpers")
 const { createOrUpdateTrending } = require("../trending/trendingModel")
+const { POST_PER_PAGE } = require("../../constants")
 
 const createPost = async (data) => {
     try {
@@ -47,7 +48,7 @@ const createPost = async (data) => {
     }
 }
 
-async function getPost(page, limit){
+async function getPost(page, nextId){
     try {
         const posts = await Post.find()
             .populate({
@@ -55,14 +56,33 @@ async function getPost(page, limit){
                 select : { _id : 1, name : 1, username : 1, imageUrl : 1}
             })
             .sort({ createdAt : -1 })
-            .skip(limit * (page - 1))
-            .limit(limit); 
-        return posts;        
+            .skip(POST_PER_PAGE * (page - 1))
+            .limit(POST_PER_PAGE); 
+        return posts;   
+        
+        // const filterQuery = {}
+        // if(nextId){
+        //     filterQuery._id = {$lt: new mongoose.Types.ObjectId()}
+        // }     
+        // const posts = await Post.find(filterQuery)
+        //     .populate({
+        //         path : "creator",
+        //         select : { _id : 1, name : 1, username : 1, imageUrl : 1}
+        //     })
+        //     .sort({ _id : -1, createdAt: -1 })
+        //     .limit(POST_PER_PAGE)
+        
+        // const next = posts[posts.length - 1]._id
+
+        // return { posts, next };
+
     } catch (error) {
         console.log("error",error);
         throw error;
     }
 }
+
+// 65c28dc6abac025e7f328a64
 
 async function singlePost(postId){
     try {
