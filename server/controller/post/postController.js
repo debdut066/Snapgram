@@ -28,9 +28,6 @@ async function getRecentPost(req, res, next){
     try {
         const page = req.query.page || 1;
         const response = await postModel.getPost(page);
-        // return res.status(200).json({ 
-        //     data : response
-        // });
         return res.status(200).json(response);
     } catch (error) {
         console.log(error.message)

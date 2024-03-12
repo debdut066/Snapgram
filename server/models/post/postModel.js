@@ -48,7 +48,7 @@ const createPost = async (data) => {
     }
 }
 
-async function getPost(page, nextId){
+async function getPost(page){
     try {
         const posts = await Post.find()
             .populate({
@@ -81,8 +81,6 @@ async function getPost(page, nextId){
         throw error;
     }
 }
-
-// 65c28dc6abac025e7f328a64
 
 async function singlePost(postId){
     try {
