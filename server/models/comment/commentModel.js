@@ -4,6 +4,7 @@ const { uploadImage } = require("../../helpers/helpers")
 const Comment = require("../../schema/comment/commentSchema");
 const Post = require("../../schema/post/postSchema")
 const createError = require('http-errors');
+const { COMMENT_PER_PAGE }  = require("../../constants")
 
 const createComment = async (userId, postId, content, file) => {
     try {
@@ -51,7 +52,7 @@ const createComment = async (userId, postId, content, file) => {
     }
 }
 
-const getComments = async (postId) => {
+const getComments = async (postId, page) => {
     try {
         const post = await Post.findById(postId);
         if(!post){
@@ -64,8 +65,8 @@ const getComments = async (postId) => {
                         select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
                     })
                     .sort({ createdAt : -1 })
-                    .skip(10 * (1 - 1))
-                    .limit(10); 
+                    .skip(COMMENT_PER_PAGE* (page - 1))
+                    .limit(COMMENT_PER_PAGE); 
             
             return comments;
         }
@@ -76,7 +77,52 @@ const getComments = async (postId) => {
     }
 }
 
+const likeComment = async (commentId, userId) => {
+    try {
+        const comment = await Comment.findById(commentId);
+        const isLikedComment = comment.likes.includes(userId);
+        const option = isLikedComment ? "$pull" : "$addToSet";
+
+        const updatedComment = await Comment.findByIdAndUpdate(
+            commentId,
+            { [option] : { likes : userId},
+              $inc :  { l_c : isLikedComment ? -1 : 1}     
+            },
+            { new : true},
+        );
+
+        return updatedComment
+        
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
+const deleteComment = async (postId, commentId) => {
+    try {
+        const post = await Post.findById(postId);
+        const isCommentExist = post.comment.includes(commentId);
+        
+        await Comment.findByIdAndDelete(commentId);
+        if(isCommentExist){
+            await Post.findByIdAndUpdate(
+                commentId,
+                {   $pull : { comment : commentId },
+                    $inc :  { c_c : -1 } 
+                }
+            )
+        }
+        return "comment deleted"
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
 module.exports = {
     createComment,
-    getComments
+    getComments,
+    likeComment,
+    deleteComment
 }
