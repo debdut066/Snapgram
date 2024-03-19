@@ -18,7 +18,6 @@ export const QUERY_KEYS = {
 
     // COMMENT KEYS
     GET_RECENT_COMMENTS : "getRecentComments",
-
   
     //  SEARCH KEYS
     SEARCH_POSTS : "getSearchPosts",

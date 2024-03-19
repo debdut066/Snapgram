@@ -19,7 +19,7 @@ import {
     searchPosts,
     getRecentPost
 } from "../../api/postApi.js"
-import { creatComment } from "../../api/commentApi.js" 
+import { creatComment, likeComment, GetComments, deleteComment } from "../../api/commentApi.js" 
 import { getUserById, updateUser, getSavedPost } from "../../api/userApi.js"
 import { QUERY_KEYS } from "./queryKeys.js"
 
@@ -106,19 +106,19 @@ export function useLikePost(){
         },
         onSuccess : (data) => {
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_POST_BY_ID, data?._id]
+                queryKey : [QUERY_KEYS.GET_POST_BY_ID, data?._id]
             });
 
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_RECENT_POSTS]
+                queryKey : [QUERY_KEYS.GET_RECENT_POSTS]
             });
 
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_POSTS]
+                queryKey : [QUERY_KEYS.GET_POSTS]
             });
 
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_CURRENT_USER]
+                queryKey : [QUERY_KEYS.GET_CURRENT_USER]
             });
         }
     })
@@ -166,15 +166,15 @@ export function useSavePost(){
         },
         onSuccess : () => {
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_RECENT_POSTS]
+                queryKey : [QUERY_KEYS.GET_RECENT_POSTS]
             });
 
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_POSTS]
+                queryKey : [QUERY_KEYS.GET_POSTS]
             });
 
             queryClient.invalidateQueries({
-                queryKey : [QUERY.GET_CURRENT_USER]
+                queryKey : [QUERY_KEYS.GET_CURRENT_USER]
             });
         }
     })
@@ -187,15 +187,19 @@ export function useGetSavedPost(token){
     })
 }
 
-export function useCreateComment(){
+export function useCreateComment(postId){
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn : ({ data, token}) => {
             creatComment(data, token)
         },
-        onSuccess : (data) => {
+        onSuccess : () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_RECENT_COMMENTS],
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_POST_BY_ID, postId]
             });
         }
     })
@@ -205,6 +209,52 @@ export function useGetPosts(token){
     return useInfiniteQuery({
         queryKey : [QUERY_KEYS.GET_INFINITE_POSTS],
         queryFn : ({ pageParam = 1 }) => getRecentPost(pageParam, token),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === PER_PAGE ? allPages.length + 1 : undefined;
+        },
+    })
+}
+
+export function useLikeComment(postId){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ commentId, token }) =>{
+            likeComment(commentId, token)
+        },
+        onSuccess : () => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_POST_BY_ID, postId]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_RECENT_COMMENTS]
+            })
+        }
+    })
+}
+
+export function useDeleteComment(postId){
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn : ({ commentId, token }) =>{
+            deleteComment(commentId, token, postId)
+        },
+        onSuccess : () => {
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_POST_BY_ID, postId]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey : [QUERY_KEYS.GET_RECENT_COMMENTS]
+            })
+        }
+    })
+}
+
+export function useGetComments(postId, token){
+    return useInfiniteQuery({
+        queryKey : [QUERY_KEYS.GET_RECENT_COMMENTS],
+        queryFn : ({ pageParam = 1 }) => GetComments(pageParam, postId ,token),
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length === PER_PAGE ? allPages.length + 1 : undefined;
         },

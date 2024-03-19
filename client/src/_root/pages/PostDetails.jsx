@@ -1,31 +1,42 @@
+import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom"
-
+import { useInView } from "react-intersection-observer"
 import { FiSend } from "react-icons/fi";
-
 import { Button } from "../../components/ui/button";
 import Loader from "../../components/shared/Loader"
 import { UserContext } from "../../context/AuthContext"
 import { multiFormatDateString } from "../../lib/utils";
 
-import { useDeletePost, useGetPostById, useCreateComment } from "../../lib/react-query/queries"; 
+import { useDeletePost, useGetPostById, useCreateComment, useGetComments } from "../../lib/react-query/queries"; 
 import PostStats from "../../components/shared/PostStats";
 import CommentList from "../../components/shared/CommentList"
 import { useState } from "react";
 
 export default function PostDetails(){
     const navigate = useNavigate();
+    const { ref, inView } = useInView();
     const { id : postId } = useParams();
     const { token, user } = UserContext();
     const [commentValue, setCommentValue] = useState("")
 
     const { data : post, isLoading } = useGetPostById(token, postId);
+    const { data , fetchNextPage, hasNextPage } = useGetComments(postId, token)
+    const comments = data?.pages
+    
     const { mutate : deletePost } = useDeletePost();
-    const { mutateAsync: createComment, isLoading: isCreatingComment } = useCreateComment();
+    const { mutateAsync: createComment, isLoading: isCreatingComment } = useCreateComment(postId);
 
     function handleDeletePost(){
         deletePost({ postId : postId, token : token })
         navigate(-1);
     }
+
+    useEffect(()=>{
+        if(inView){
+            fetchNextPage();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[inView])
 
     async function submitComment(){
         let reqBody = {
@@ -119,7 +130,7 @@ export default function PostDetails(){
                                 <Button
                                     onClick={handleDeletePost}
                                     variant="ghost"
-                                    className={`post_details-delete_btn ${user._id !== post.creator._id && "hidden"}`}
+                                    className={`ost_details-delete_btn ${user._id !== post.creator._id && "hidden"}`}
                                 >
                                     <img
                                         src="../../../icons/delete.svg"
@@ -134,11 +145,22 @@ export default function PostDetails(){
 
                         <hr className="border w-full border-dark-4/80" />
                         
-                        <CommentList commentData={post.comment}/>
+                        { comments?.length !== 0 && comments.map((comment, i) => (
+                            <CommentList 
+                                key={i} 
+                                user={user} 
+                                inView={inView}
+                                token={token} 
+                                forwardRef={ref}
+                                postId={postId} 
+                                commentData={comment} 
+                                hasNextPage={hasNextPage}
+                            />
+                        ))}
 
-                        <div className="w-full h-24 flex flex-col gap-x-10 justify-between">
+                        <div className="w-full h-24 flex flex-col flex-1 gap-x-10 justify-between">
                             <PostStats post={post} user={user} token={token}/>
-                            <div className="h-2/5 flex justify-center items-center w-full gap-x-5">
+                            <div className="lg:h-2/5 hidden lg:flex justify-center items-center w-full gap-x-5">
                                 <img 
                                     src={user.imageUrl || "../../../icons/profile-placeholder.svg"} 
                                     alt="profile-image"

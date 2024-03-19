@@ -7,7 +7,7 @@ import GridPostList from '../../components/shared/GridPostList';
 import { UserContext } from '../../context/AuthContext';
 
 import useDebounce from '../../hooks/useDebounce';
-import { useSearchPost, useGetRecentPosts, useGetPosts } from '../../lib/react-query/queries';
+import { useSearchPost, useGetPosts } from '../../lib/react-query/queries';
 
 function SearchResults({ isSearchFetching, searchedPosts }){
     if(isSearchFetching){

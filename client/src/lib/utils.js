@@ -80,7 +80,7 @@ export function formatTimestamp(timestamp) {
   } else if (months >= 1) {
       return months + (months === 1 ? "m" : "m");
   } else if (weeks >= 1) {
-      return weeks + (weeks === 1 ? "w" : "wk");
+      return weeks + (weeks === 1 ? "w" : "w");
   } else if (days >= 1) {
       return days + (days === 1 ? "d" : "d");
   } else if (hours >= 1) {
