@@ -19,7 +19,7 @@ const createComment = async (req, res, next) => {
 const getComments = async (req, res, next) => {
     try {
         const postId = req.params.id;
-        const page = req.quer.page || 1;
+        const page = req.query.page || 1;
         if(!postId){
             throw createError.Conflict("postId missing!!");
         }else{
@@ -50,7 +50,7 @@ const likeComment = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
     try {
-        let commentId = req.params.commentId;
+        let commentId = req.params.id;
         let postId = req.body.postId;
 
         if(!commentId && !postId){

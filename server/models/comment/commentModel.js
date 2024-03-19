@@ -21,7 +21,7 @@ const createComment = async (userId, postId, content, file) => {
                 comment = new Comment({
                     _id : commentId,
                     creator : userId,
-                    post : postId,
+                    postId : postId,
                     image : imageUrl,
                     content,
                 })
@@ -30,7 +30,7 @@ const createComment = async (userId, postId, content, file) => {
             comment = new Comment({
                 _id : commentId,
                 creator : userId,
-                post : postId,
+                postId : postId,
                 content,
             })
         }
@@ -59,7 +59,7 @@ const getComments = async (postId, page) => {
             return createError.BadRequest("the post doesn't exist anymore")
         }else{
             let comments = 
-                await Comment.find({ post : postId })
+                await Comment.find({ postId })
                     .populate({ 
                         path : "creator",
                         select : { _id : 1, name: 1, username : 1, imageUrl : 1 }
@@ -106,12 +106,16 @@ const deleteComment = async (postId, commentId) => {
         
         await Comment.findByIdAndDelete(commentId);
         if(isCommentExist){
-            await Post.findByIdAndUpdate(
-                commentId,
-                {   $pull : { comment : commentId },
-                    $inc :  { c_c : -1 } 
-                }
-            )
+            try {
+                await Post.findByIdAndUpdate(
+                    postId,
+                    {   $pull : { comment : commentId },
+                        $inc :  { c_c : -1 } 
+                    },
+                )
+            } catch (error) {
+                console.log(error)
+            }
         }
         return "comment deleted"
     } catch (error) {

@@ -10,6 +10,7 @@ const { redisConnect } = require('./redisConnect');
 const { subscriber }= require("./services/redis-Pub-Sub")
 const SocketService = require("./services/socket")
 const socketService = new SocketService()
+const User = require("./schema/user/userSchema")
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(fileUpload({
 }))
 
 // redisConnect();
-subscriber();
+// subscriber();
 
 /**
 * @AUTH_ROUTE

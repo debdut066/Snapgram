@@ -14,7 +14,7 @@ class SocketService {
     initListeners(){
         const _io = this._io;
         _io.on("connect", (socket) => {
-            console.log("socket connected")
+            // console.log("socket connected")
         })
     }
 }
